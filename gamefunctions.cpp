@@ -39,6 +39,9 @@ void GameFunctions::run()
         case LIBERO:
             libero();
             break;
+         case OFFDEFENDER:
+            offdefender();
+            break;
         default:
             break;
         }
@@ -729,7 +732,7 @@ void GameFunctions::midfield()
 {
     dataState robot = teamRobot[indexRobot].getDataState();
     float time;
-    time = 0.1;
+    time = 0.2;
 
     if( euclidean_dist(robot.pos, ball.pos) <= 15)
     {
@@ -768,7 +771,7 @@ void GameFunctions::midfield()
     {
         setAtkSituation(true);
     }
-    if((robot.pos.x < ball.pos.x) && (ball.pos.y < 100) && (ball.pos.y > 30))
+    if((robot.pos.x < ball.pos.x) && (ball.pos.y < 110) && (ball.pos.y > 20))
     {
         goal = ballPrev;
         setCrossing(true);
@@ -1013,6 +1016,13 @@ void GameFunctions::libero()
 
 }
 
+void GameFunctions::offdefender()
+{
+    dataState robot = teamRobot[indexRobot].getDataState();
+    goal.x = centroidDef.x + offLine;
+    goal.y = ball.pos.y;
+    thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos, goal);
+}
 
 
 

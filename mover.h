@@ -25,6 +25,7 @@ public:
     void impostor();
     void libero();
     void newstriker();
+    void offdefender();
     void setGameFunctions(GameFunctions *, GameFunctions *, GameFunctions *);
     void setRobots(vector<robot>);
     void setAreas(Point2f, Point2f);
@@ -83,6 +84,7 @@ private:
     bool firstAceleration = true;
     bool airball;
 
+    float offLine = 115;
     float distGiro = 6;
     float distGiroGoleiro = 8;
     float velGiroLado = 0.8;

@@ -12,6 +12,7 @@
 #define FULL_ATK 1
 #define SAFE_FULL_ATK 2
 #define NS 3
+#define OFF 6
 
 
 #define SIT 4380
@@ -61,6 +62,7 @@ private:
     int strikerIndex = 1;
     int liberoIndex = 2;
     KNN knnfunction;
+    float offLine = 115;
 };
 
 #endif // DECISION_H

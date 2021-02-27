@@ -32,18 +32,15 @@
 #define PI 3.141592
 #define NUMROBOTS 3
 #define FPS 100
-#define STRATEGY 1
+#define STRATEGY 0
 
 //  Para escolher qual strategy utilizar altere os valores acima de acordo com a tabela a seguir
 //  0 = FIXED
 //  1 = FULL_ATK
 //  2 = SAFE_FULL_ATK
 //  3 = NS
-//  4 = FUZZY
 //  5 = KNN
-//  6 = IMPOSTOR_
-//  7 = DOWNBELOW
-//  8 = FUZZYLEIRO
+//  6 - OFF
 
 struct Point2f{
     float x,y;

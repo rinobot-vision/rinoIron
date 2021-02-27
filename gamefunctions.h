@@ -40,6 +40,7 @@ public:
     void wing();
     void volante();
     void libero();
+    void offdefender();
 
 
     void PlotPath(int i, robot);
@@ -97,6 +98,7 @@ private:
     bool penaultyPermission = false;
     float defenderLine = 38;
     float volanteLine = 38;
+    float offLine = 115;
     int strategy;
     float lastX = defenderLine;
 

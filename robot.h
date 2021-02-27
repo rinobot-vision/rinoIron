@@ -12,6 +12,7 @@
 #define VOLANTE 6
 #define LIBERO 7
 #define STRIKERAGAINSTEAM 8
+#define OFFDEFENDER 9
 
 
 class robot
