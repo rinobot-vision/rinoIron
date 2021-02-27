@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
     ActuatorClient *actuatorClient = new ActuatorClient("127.0.0.1", 20011);
 
     // Setting our color as BLUE at left side
-    VSSRef::Color ourColor = VSSRef::Color::YELLOW;
+    VSSRef::Color ourColor = VSSRef::Color::BLUE;
     bool ourSideIsLeft;
 
     if(ourColor == VSSRef::Color::BLUE){
