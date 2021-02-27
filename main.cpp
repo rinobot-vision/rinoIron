@@ -143,7 +143,6 @@ int main(int argc, char *argv[]) {
         // Sending robot commands for robot 0, 1 and 2
         Point2f Velocidades[3];
         GameWindow.EnviaVelocidades(Velocidades);
-
         if(refereeClient->getLastFoul() == VSSRef::Foul::PENALTY_KICK){
             if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){
                 replacerClient->placeRobot(2, ourSideIsLeft ? 0.30 : -0.1, 0.02, 15);
@@ -158,21 +157,18 @@ int main(int argc, char *argv[]) {
                 replacerClient->sendFrame();
             }
         }
-        for(int i = 0; i < 3; i++){
-            actuatorClient->sendCommand(i, Velocidades[i].x, Velocidades[i].y);
+        if(refereeClient->getLastFoul() == VSSRef::Foul::GAME_ON){
+            for(int i = 0; i < 3; i++){
+                actuatorClient->sendCommand(i, Velocidades[i].x, Velocidades[i].y);
+            }
         }
-//        if(refereeClient->getLastFoul() == VSSRef::Foul::GAME_ON){
-//            for(int i = 0; i < 3; i++){
-//                actuatorClient->sendCommand(i, Velocidades[i].x, Velocidades[i].y);
-//            }
-//        }
-//        else{
-//            if(refereeClient->getLastFoul() == VSSRef::Foul::STOP){
-//                for(int i = 0; i < 3; i++){
-//                    actuatorClient->sendCommand(i, 0, 0);
-//                }
-//            }
-//        }
+        else{
+            if(refereeClient->getLastFoul() == VSSRef::Foul::STOP){
+                for(int i = 0; i < 3; i++){
+                    actuatorClient->sendCommand(i, 0, 0);
+                }
+            }
+        }
         if(refereeClient->getLastFoul() == VSSRef::Foul::HALT){
             for(int i = 0; i < 3; i++){
                 actuatorClient->sendCommand(i, 0, 0);
@@ -211,6 +207,7 @@ int main(int argc, char *argv[]) {
                 replacerClient->sendFrame();
            }
         }
+        
         if(refereeClient->getLastFoul() == VSSRef::Foul::GOAL_KICK){
             if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){
                 replacerClient->placeRobot(0, ourSideIsLeft ?  -0.45 : 0.35, 0 , 0);
@@ -225,6 +222,7 @@ int main(int argc, char *argv[]) {
                replacerClient->sendFrame();
            }
         }
+
 
         // Stop timer
         timer.stop();
