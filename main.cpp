@@ -201,6 +201,20 @@ int main(int argc, char *argv[]) {
            }
         }
         
+        if(refereeClient->getLastFoul() == VSSRef::Foul::GOAL_KICK){
+            if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){
+                replacerClient->placeRobot(0, ourSideIsLeft ?  -0.45 : 0.35, 0 , 0);
+                replacerClient->placeRobot(2, ourSideIsLeft ?  -0.68 : 0 , ourSideIsLeft ? ball.y() : 0 , 0);
+                replacerClient->placeRobot(1, ourSideIsLeft ? -0.55 : 0.71, 0, 0);
+                replacerClient->sendFrame();
+           }
+           if(refereeClient->getLastFoulColor() == VSSRef::Color::YELLOW){
+               replacerClient->placeRobot(0, ourSideIsLeft ?  0.45 : 0.45, 0, 0);
+               replacerClient->placeRobot(2, ourSideIsLeft ?  0 : 0.68 , ourSideIsLeft ? 0 : ball.y() , 0);
+               replacerClient->placeRobot(1, ourSideIsLeft ?  -0.71 : 0.55 , 0, 0);
+               replacerClient->sendFrame();
+           }
+        }
 
 
         // Stop timer
