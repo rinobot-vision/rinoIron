@@ -136,12 +136,12 @@ int main(int argc, char *argv[]) {
         // Sending robot commands for robot 0, 1 and 2
         Point2f Velocidades[3];
         GameWindow.EnviaVelocidades(Velocidades);
-        if(refereeClient->getLastFoul() == VSSRef::Foul::PENALTY_KICK){
+        /*if(refereeClient->getLastFoul() == VSSRef::Foul::PENALTY_KICK){
             replacerClient->placeRobot(0, ourSideIsLeft ? 0.29 : -0.29, 0.03, 15*PI/180);
             replacerClient->placeRobot(1, ourSideIsLeft ? -0.40 : 0.40, 0, PI/2);
             replacerClient->placeRobot(2, ourSideIsLeft ? -0.75 : 0.75, 0, PI/2);
             replacerClient->sendFrame();
-        }
+        }*/
         
         if(refereeClient->getLastFoul() == VSSRef::Foul::GAME_ON){
             for(int i = 0; i < 3; i++){
