@@ -137,12 +137,19 @@ int main(int argc, char *argv[]) {
         Point2f Velocidades[3];
         GameWindow.EnviaVelocidades(Velocidades);
         if(refereeClient->getLastFoul() == VSSRef::Foul::PENALTY_KICK){
-            replacerClient->placeRobot(0, ourSideIsLeft ? 0.29 : -0.29, 0.03, 15*PI/180);
-            replacerClient->placeRobot(1, ourSideIsLeft ? 0 : 0, 0, PI/2);
-            replacerClient->placeRobot(2, ourSideIsLeft ? -0.75 : 0.75, 0, PI/2);
-            replacerClient->sendFrame();
+            if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){
+                replacerClient->placeRobot(2, ourSideIsLeft ? 0.30 : -0.1, 0.02, 15);
+                replacerClient->placeRobot(0, ourSideIsLeft ? -0.4 : -0.1, -0.2, 90);
+                replacerClient->placeRobot(1, ourSideIsLeft ? -0.75 : 0.75, 0, 90);
+                replacerClient->sendFrame();
+            }
+            if(refereeClient->getLastFoulColor() == VSSRef::Color::YELLOW){
+                replacerClient->placeRobot(2, ourSideIsLeft ? 0.1 : -0.30, 0.02, 15);
+                replacerClient->placeRobot(0, ourSideIsLeft ? 0.1 : 0.4 , -0.1, 90);
+                replacerClient->placeRobot(1, ourSideIsLeft ? -0.75 : 0.75, 0, 90);
+                replacerClient->sendFrame();
+            }
         }
-        
         if(refereeClient->getLastFoul() == VSSRef::Foul::GAME_ON){
             for(int i = 0; i < 3; i++){
                 actuatorClient->sendCommand(i, Velocidades[i].x, Velocidades[i].y);
@@ -160,7 +167,7 @@ int main(int argc, char *argv[]) {
                 actuatorClient->sendCommand(i, 0, 0);
             }
         }
-                if(refereeClient->getLastFoul() == VSSRef::Foul::KICKOFF){
+        if(refereeClient->getLastFoul() == VSSRef::Foul::KICKOFF){
             replacerClient->placeRobot(0, ourSideIsLeft ? -0.24 : 0.24, 0, 0);
             replacerClient->placeRobot(1, ourSideIsLeft ? -0.34 : 0.34, 0, PI/2);
             replacerClient->placeRobot(2, ourSideIsLeft ? -0.75 : 0.75, 0, PI/2);
@@ -169,27 +176,27 @@ int main(int argc, char *argv[]) {
 
         if(refereeClient->getLastFoul() == VSSRef::Foul::FREE_BALL){
             if(refereeClient->getLastFoulQuadrant() == VSSRef::Quadrant::QUADRANT_1){
-                replacerClient->placeRobot(0, ourSideIsLeft ?  0.22 : 0.62, -0.4, 0);
+                replacerClient->placeRobot(2, ourSideIsLeft ?  -0.22 : -0.62, -0.4, 0);
                 replacerClient->placeRobot(1, ourSideIsLeft ? -0.3 : 0.3, 0.04, PI/2);
-                replacerClient->placeRobot(2, ourSideIsLeft ? -0.73 : 0.73, -0.2, PI/2);
+                replacerClient->placeRobot(0, ourSideIsLeft ? -0.71 : 0.71, -0.19, PI/2);
                 replacerClient->sendFrame();
             }
             if(refereeClient->getLastFoulQuadrant() == VSSRef::Quadrant::QUADRANT_2){
-                replacerClient->placeRobot(0, ourSideIsLeft ?  -0.62 : -0.22, -0.4, 0);
+                replacerClient->placeRobot(2, ourSideIsLeft ?  0.62 : 0.22, -0.4, 0);
                 replacerClient->placeRobot(1, ourSideIsLeft ? -0.3 : 0.3, 0.04, PI/2);
-                replacerClient->placeRobot(2, ourSideIsLeft ? -0.73 : 0.73, -0.2, PI/2);
+                replacerClient->placeRobot(0, ourSideIsLeft ? -0.71 : 0.71, -0.19, PI/2);
                 replacerClient->sendFrame();
             }
             if(refereeClient->getLastFoulQuadrant() == VSSRef::Quadrant::QUADRANT_3){
-                replacerClient->placeRobot(0, ourSideIsLeft ?  -0.62 : -0.22, +0.4, 0);
+                replacerClient->placeRobot(2, ourSideIsLeft ?  0.62 : 0.22, +0.4, 0);
                 replacerClient->placeRobot(1, ourSideIsLeft ? -0.3 : 0.3, 0, PI/2);
-                replacerClient->placeRobot(2, ourSideIsLeft ? -0.73 : 0.73, +0.2, PI/2);
+                replacerClient->placeRobot(0, ourSideIsLeft ? -0.71 : 0.71, +0.19, PI/2);
                 replacerClient->sendFrame();
             }
             if(refereeClient->getLastFoulQuadrant() == VSSRef::Quadrant::QUADRANT_4){
-                replacerClient->placeRobot(0, ourSideIsLeft ?  0.22 : 0.62, +0.4, 0);
+                replacerClient->placeRobot(2, ourSideIsLeft ?  -0.22 : -0.62, +0.4, 0);
                 replacerClient->placeRobot(1, ourSideIsLeft ? -0.3 : 0.3, -0.04, PI/2);
-                replacerClient->placeRobot(2, ourSideIsLeft ? -0.73 : 0.73, +0.2, PI/2);
+                replacerClient->placeRobot(0, ourSideIsLeft ? -0.71 : 0.71, +0.19, PI/2);
                 replacerClient->sendFrame();
             }
         }
