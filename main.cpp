@@ -155,6 +155,12 @@ int main(int argc, char *argv[]) {
                 }
             }
         }
+        if(refereeClient->getLastFoul() == VSSRef::Foul::HALT){
+            for(int i = 0; i < 3; i++){
+                actuatorClient->sendCommand(i, 0, 0);
+            }
+        }
+
 
 
         // Stop timer
