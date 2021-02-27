@@ -70,18 +70,18 @@ void Decision::updateObjectives()
     if(strategy == FIXED3)
     {
         //cout << "ENTROU NA FIXA" << endl;
-        robotFunc[2] = GOALKEEPER;
-        robotFunc[0] = STRIKER;
-        robotFunc[1] = DEFENDER;
+        robotFunc[1] = GOALKEEPER;
+        robotFunc[2] = STRIKER;
+        robotFunc[0] = DEFENDER;
 
-        teamRobot[2].setFunction(GOALKEEPER);
+        teamRobot[1].setFunction(GOALKEEPER);
         if(swapRoles){
-            teamRobot[1].setFunction(DEFENDER);
-            teamRobot[0].setFunction(STRIKER);
+            teamRobot[0].setFunction(DEFENDER);
+            teamRobot[2].setFunction(STRIKER);
         }
         else{
-            teamRobot[1].setFunction(DEFENDER);
-            teamRobot[0].setFunction(STRIKER);
+            teamRobot[0].setFunction(DEFENDER);
+            teamRobot[2].setFunction(STRIKER);
         }
     }
     if(strategy == FULL_ATK){
