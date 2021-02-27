@@ -25,9 +25,9 @@ int main(int argc, char *argv[]) {
     Timer timer;
 
     // Creating client pointers
-    VisionClient *visionClient = new VisionClient("224.40.23.2", 10002);
-    RefereeClient *refereeClient = new RefereeClient("224.5.23.2", 10003);
-    ReplacerClient *replacerClient = new ReplacerClient("224.5.23.2", 10004);
+    VisionClient *visionClient = new VisionClient("224.40.23.1", 10002);
+    RefereeClient *refereeClient = new RefereeClient("224.40.23.1", 10003);
+    ReplacerClient *replacerClient = new ReplacerClient("224.40.23.1", 10004);
     ActuatorClient *actuatorClient = new ActuatorClient("127.0.0.1", 20011);
 
     // Setting our color as BLUE at left side
