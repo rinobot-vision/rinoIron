@@ -136,18 +136,26 @@ int main(int argc, char *argv[]) {
         // Sending robot commands for robot 0, 1 and 2
         Point2f Velocidades[3];
         GameWindow.EnviaVelocidades(Velocidades);
-        for(int i = 0; i < 3; i++){
-            actuatorClient->sendCommand(i, Velocidades[i].x, Velocidades[i].y);
-        }
-
-
-        // If is kickoff, send this test frame!
-        if(refereeClient->getLastFoul() == VSSRef::Foul::KICKOFF) {
-            replacerClient->placeRobot(0, ourSideIsLeft ? -0.2 : 0.2, 0, 0);
-            replacerClient->placeRobot(1, ourSideIsLeft ? -0.2 : 0.2, 0.2, 0);
-            replacerClient->placeRobot(2, ourSideIsLeft ? -0.2 : 0.2, -0.2, 0);
+        if(refereeClient->getLastFoul() == VSSRef::Foul::PENALTY_KICK){
+            replacerClient->placeRobot(0, ourSideIsLeft ? 0.31 : -0.31, 0.05, 15*PI/180);
+            replacerClient->placeRobot(1, ourSideIsLeft ? -0.40 : 0.40, 0, PI/2);
+            replacerClient->placeRobot(2, ourSideIsLeft ? -0.75 : 0.75, 0, PI/2);
             replacerClient->sendFrame();
         }
+        
+        if(refereeClient->getLastFoul() == VSSRef::Foul::GAME_ON){
+            for(int i = 0; i < 3; i++){
+                actuatorClient->sendCommand(i, Velocidades[i].x, Velocidades[i].y);
+            }
+        }
+        else{
+            if(refereeClient->getLastFoul() == VSSRef::Foul::STOP){
+                for(int i = 0; i < 3; i++){
+                    actuatorClient->sendCommand(i, 0, 0);
+                }
+            }
+        }
+
 
         // Stop timer
         timer.stop();
