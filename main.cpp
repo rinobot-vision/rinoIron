@@ -168,37 +168,37 @@ int main(int argc, char *argv[]) {
             }
         }
         if(refereeClient->getLastFoul() == VSSRef::Foul::KICKOFF){
-            replacerClient->placeRobot(0, ourSideIsLeft ? -0.24 : 0.24, 0, 0);
-            replacerClient->placeRobot(1, ourSideIsLeft ? -0.34 : 0.34, 0, PI/2);
-            replacerClient->placeRobot(2, ourSideIsLeft ? -0.75 : 0.75, 0, PI/2);
+            replacerClient->placeRobot(2, ourSideIsLeft ? -0.24 : 0.24, 0, 0);
+            replacerClient->placeRobot(0, ourSideIsLeft ? -0.34 : 0.34, 0, 90);
+            replacerClient->placeRobot(1, ourSideIsLeft ? -0.75 : 0.75, 0, 90);
             replacerClient->sendFrame();
         }
 
         if(refereeClient->getLastFoul() == VSSRef::Foul::FREE_BALL){
             if(refereeClient->getLastFoulQuadrant() == VSSRef::Quadrant::QUADRANT_1){
-                replacerClient->placeRobot(2, ourSideIsLeft ?  -0.22 : -0.62, -0.4, 0);
-                replacerClient->placeRobot(1, ourSideIsLeft ? -0.3 : 0.3, 0.04, PI/2);
-                replacerClient->placeRobot(0, ourSideIsLeft ? -0.71 : 0.71, -0.19, PI/2);
+                replacerClient->placeRobot(2, ourSideIsLeft ?  0.14 : 0.62, 0.4, 0);
+                replacerClient->placeRobot(0, ourSideIsLeft ?  -0.3 : 0.3, -0.04, 90);
+                replacerClient->placeRobot(1, ourSideIsLeft ? -0.71 : 0.71, 0.19, 90);
                 replacerClient->sendFrame();
             }
             if(refereeClient->getLastFoulQuadrant() == VSSRef::Quadrant::QUADRANT_2){
-                replacerClient->placeRobot(2, ourSideIsLeft ?  0.62 : 0.22, -0.4, 0);
-                replacerClient->placeRobot(1, ourSideIsLeft ? -0.3 : 0.3, 0.04, PI/2);
-                replacerClient->placeRobot(0, ourSideIsLeft ? -0.71 : 0.71, -0.19, PI/2);
+                replacerClient->placeRobot(2, ourSideIsLeft ?  -0.60 : -0.14, 0.4, 0);
+                replacerClient->placeRobot(0, ourSideIsLeft ?  -0.3 : 0.3, -0.04, 90);
+                replacerClient->placeRobot(1, ourSideIsLeft ? -0.71 : 0.71, 0.19, 90);
                 replacerClient->sendFrame();
             }
             if(refereeClient->getLastFoulQuadrant() == VSSRef::Quadrant::QUADRANT_3){
-                replacerClient->placeRobot(2, ourSideIsLeft ?  0.62 : 0.22, +0.4, 0);
-                replacerClient->placeRobot(1, ourSideIsLeft ? -0.3 : 0.3, 0, PI/2);
-                replacerClient->placeRobot(0, ourSideIsLeft ? -0.71 : 0.71, +0.19, PI/2);
+                replacerClient->placeRobot(2, ourSideIsLeft ?  -0.60 : -0.14, -0.4, 0);
+                replacerClient->placeRobot(0, ourSideIsLeft ?  -0.3 : 0.3, 0.04, 90);
+                replacerClient->placeRobot(1, ourSideIsLeft ? -0.71 : 0.71, -0.19, 90);
                 replacerClient->sendFrame();
             }
             if(refereeClient->getLastFoulQuadrant() == VSSRef::Quadrant::QUADRANT_4){
-                replacerClient->placeRobot(2, ourSideIsLeft ?  -0.22 : -0.62, +0.4, 0);
-                replacerClient->placeRobot(1, ourSideIsLeft ? -0.3 : 0.3, -0.04, PI/2);
-                replacerClient->placeRobot(0, ourSideIsLeft ? -0.71 : 0.71, +0.19, PI/2);
+                replacerClient->placeRobot(2, ourSideIsLeft ?  0.18 : 0.62, -0.4, 0);
+                replacerClient->placeRobot(0, ourSideIsLeft ?  -0.3 : 0.3, 0.04, 90);
+                replacerClient->placeRobot(1, ourSideIsLeft ? -0.71 : 0.71, -0.19, 90);
                 replacerClient->sendFrame();
-            }
+           }
         }
         
 
