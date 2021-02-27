@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
     ActuatorClient *actuatorClient = new ActuatorClient("127.0.0.1", 20011);
 
     // Setting our color as BLUE at left side
-    VSSRef::Color ourColor = VSSRef::Color::BLUE;
+    VSSRef::Color ourColor = VSSRef::Color::YELLOW;
     bool ourSideIsLeft = false;
 
     // Desired frequency (in hz)
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
         Point2f Velocidades[3];
         GameWindow.EnviaVelocidades(Velocidades);
         if(refereeClient->getLastFoul() == VSSRef::Foul::PENALTY_KICK){
-            replacerClient->placeRobot(0, ourSideIsLeft ? 0.31 : -0.31, 0.05, 15*PI/180);
+            replacerClient->placeRobot(0, ourSideIsLeft ? 0.29 : -0.29, 0.03, 15*PI/180);
             replacerClient->placeRobot(1, ourSideIsLeft ? -0.40 : 0.40, 0, PI/2);
             replacerClient->placeRobot(2, ourSideIsLeft ? -0.75 : 0.75, 0, PI/2);
             replacerClient->sendFrame();
