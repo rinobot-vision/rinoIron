@@ -160,7 +160,12 @@ int main(int argc, char *argv[]) {
                 actuatorClient->sendCommand(i, 0, 0);
             }
         }
-
+        if(refereeClient->getLastFoul() == VSSRef::Foul::KICKOFF){
+            replacerClient->placeRobot(0, ourSideIsLeft ? -0.2 : 0.2, 0, 0);
+            replacerClient->placeRobot(1, ourSideIsLeft ? -0.3 : 0.3, 0, PI/2);
+            replacerClient->placeRobot(2, ourSideIsLeft ? -0.75 : 0.75, 0, PI/2);
+            replacerClient->sendFrame();
+        }
 
 
         // Stop timer
