@@ -385,7 +385,7 @@ void Mover::defender()
         {
             temp = (float) (clock() - clockInvert)/CLOCKS_PER_SEC;
             //cout<<"temp"<<temp<<endl;
-            if(temp >= 3){
+            if(temp >= 0.214){
                 //  cout<<"tempo"<<endl;
                 inverte = true;
                 clockTroca = clock();
@@ -401,7 +401,7 @@ void Mover::defender()
     if(inverte == true)
     {
         tempoTroca = (float) (clock() - clockTroca)/CLOCKS_PER_SEC;
-        if(tempoTroca > 3)
+        if(tempoTroca > 0.214)
             tempoTroca = 0;
     }
 
@@ -733,7 +733,7 @@ void Mover::striker()
         {
             temp = (float) (clock() - clockInvert)/CLOCKS_PER_SEC;
             // cout<<"temp"<<temp<<endl;
-            if(temp >= 3){
+            if(temp >= 0.214){
                 //   cout<<"tempoo"<<endl;
                 inverte = true;
                 clockTroca = clock();
@@ -968,7 +968,7 @@ void Mover::fake9()
         {
             temp = (float) (clock() - clockInvert)/CLOCKS_PER_SEC;
             //            cout<<"temp"<<temp<<endl;
-            if(temp >= 2){
+            if(temp >= 0.142){
                 //                cout<<"tempoo"<<endl;
                 inverte = true;
                 clockTroca = clock();
