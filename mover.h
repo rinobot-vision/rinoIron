@@ -69,7 +69,7 @@ private:
     dataState ball;
     MatrixXd robotGains;
 
-    float l = 0.0285;
+    float l = 0.02;
     float alpha;
     float lastAlpha;
     float lastVel;
