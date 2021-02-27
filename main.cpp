@@ -136,12 +136,12 @@ int main(int argc, char *argv[]) {
         // Sending robot commands for robot 0, 1 and 2
         Point2f Velocidades[3];
         GameWindow.EnviaVelocidades(Velocidades);
-        /*if(refereeClient->getLastFoul() == VSSRef::Foul::PENALTY_KICK){
+        if(refereeClient->getLastFoul() == VSSRef::Foul::PENALTY_KICK){
             replacerClient->placeRobot(0, ourSideIsLeft ? 0.29 : -0.29, 0.03, 15*PI/180);
             replacerClient->placeRobot(1, ourSideIsLeft ? -0.40 : 0.40, 0, PI/2);
             replacerClient->placeRobot(2, ourSideIsLeft ? -0.75 : 0.75, 0, PI/2);
             replacerClient->sendFrame();
-        }*/
+        }
         
         if(refereeClient->getLastFoul() == VSSRef::Foul::GAME_ON){
             for(int i = 0; i < 3; i++){
@@ -160,12 +160,40 @@ int main(int argc, char *argv[]) {
                 actuatorClient->sendCommand(i, 0, 0);
             }
         }
-        if(refereeClient->getLastFoul() == VSSRef::Foul::KICKOFF){
-            replacerClient->placeRobot(0, ourSideIsLeft ? -0.2 : 0.2, 0, 0);
-            replacerClient->placeRobot(1, ourSideIsLeft ? -0.3 : 0.3, 0, PI/2);
+                if(refereeClient->getLastFoul() == VSSRef::Foul::KICKOFF){
+            replacerClient->placeRobot(0, ourSideIsLeft ? -0.24 : 0.24, 0, 0);
+            replacerClient->placeRobot(1, ourSideIsLeft ? -0.34 : 0.34, 0, PI/2);
             replacerClient->placeRobot(2, ourSideIsLeft ? -0.75 : 0.75, 0, PI/2);
             replacerClient->sendFrame();
         }
+
+        if(refereeClient->getLastFoul() == VSSRef::Foul::FREE_BALL){
+            if(refereeClient->getLastFoulQuadrant() == VSSRef::Quadrant::QUADRANT_1){
+                replacerClient->placeRobot(0, ourSideIsLeft ?  0.22 : 0.62, -0.4, 0);
+                replacerClient->placeRobot(1, ourSideIsLeft ? -0.3 : 0.3, 0.04, PI/2);
+                replacerClient->placeRobot(2, ourSideIsLeft ? -0.71 : 0.71, -0.19, PI/2);
+                replacerClient->sendFrame();
+            }
+            if(refereeClient->getLastFoulQuadrant() == VSSRef::Quadrant::QUADRANT_2){
+                replacerClient->placeRobot(0, ourSideIsLeft ?  -0.62 : -0.22, -0.4, 0);
+                replacerClient->placeRobot(1, ourSideIsLeft ? -0.3 : 0.3, 0.04, PI/2);
+                replacerClient->placeRobot(2, ourSideIsLeft ? -0.71 : 0.71, -0.19, PI/2);
+                replacerClient->sendFrame();
+            }
+            if(refereeClient->getLastFoulQuadrant() == VSSRef::Quadrant::QUADRANT_3){
+                replacerClient->placeRobot(0, ourSideIsLeft ?  -0.62 : -0.22, +0.4, 0);
+                replacerClient->placeRobot(1, ourSideIsLeft ? -0.3 : 0.3, 0, PI/2);
+                replacerClient->placeRobot(2, ourSideIsLeft ? -0.71 : 0.71, +0.19, PI/2);
+                replacerClient->sendFrame();
+            }
+            if(refereeClient->getLastFoulQuadrant() == VSSRef::Quadrant::QUADRANT_4){
+                replacerClient->placeRobot(0, ourSideIsLeft ?  0.22 : 0.62, +0.4, 0);
+                replacerClient->placeRobot(1, ourSideIsLeft ? -0.3 : 0.3, -0.04, PI/2);
+                replacerClient->placeRobot(2, ourSideIsLeft ? -0.71 : 0.71, +0.19, PI/2);
+                replacerClient->sendFrame();
+            }
+        }
+        
 
 
         // Stop timer
