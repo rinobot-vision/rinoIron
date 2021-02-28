@@ -97,6 +97,8 @@ private:
     bool flagKickBall = false;
     bool penaultyPermission = false;
     bool flagGrab = false;
+    bool flagGrabM = false;
+
     float defenderLine = 35;
     float volanteLine = 38;
     float offLine = 115;
@@ -107,6 +109,12 @@ private:
     Point2f StrikeRepulsive;
     double tempoRepulsive = 0;
     double tempoStopRepulsive = 0;
+
+    Point2f StrikeRepulsiveM;
+    double tempoRepulsiveM = 0;
+    double tempoStopRepulsiveM = 0;
+    clock_t ClockStartRM;
+    clock_t ClockStopRM;
 
 };
 

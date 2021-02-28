@@ -855,7 +855,49 @@ void GameFunctions::midfield()
     //          univectorField(robot, Point2f(0,0));
     thePhi = angleTwoPoints(robot.pos,goal);
 //    cout << "META MIELDFIELD: (" << goal.x << "," << goal.y << ")" << endl;
+    if (tempoRepulsiveM == 0)
+    {
+        cout << "entrou aqui?" << endl;
+        ClockStartRM = clock();
+        tempoStopRepulsiveM = 0;
+        flagGrabM = false;
+        StrikeRepulsiveM = robot.pos;
+    }
+    tempoRepulsiveM = (double) (clock() - ClockStartRM)/CLOCKS_PER_SEC;
+//    cout  << "tempo repulsive: " << tempoRepulsive << endl;
+    if (tempoRepulsiveM >= 3){
+//        cout << "dist: " << euclidean_dist(StrikeRepulsive, robot.pos) << endl;
+//        cout << "StrikeRepulsive (" << StrikeRepulsive.x << ","  << StrikeRepulsive.y << ")" << endl;
+//        cout << "robot (" << robot.pos.x << ","  << robot.pos.y << ")" << endl;
+        if (euclidean_dist(StrikeRepulsiveM, robot.pos) <= 5 || flagGrabM == true)
+        {
+            cout << "REPULSIVE" << endl;
+            k_larg = 0.01;
+            thePhi = ajustaAngulo(thePhi + 90);
+            cout << "thePHI: " << thePhi << endl;
+            if(flagGrabM == false){
+                cout << "iniciou stop clock" << endl;
+                ClockStopRM = clock();
+            }
+            flagGrabM = true;
+        }
+        else
+        {
+            tempoRepulsiveM = 0;
+        }
+    }
+      if(flagGrabM == true){
+      tempoStopRepulsiveM = (double) (clock() - ClockStopRM)/CLOCKS_PER_SEC;
+      }
+//    cout << tempoStopRepulsive << endl;
+    if (tempoStopRepulsiveM >= 0.5)
+    {
+        cout << "REINICIA REPULSIVE" << endl;
+        tempoRepulsiveM = 0;
+        tempoStopRepulsiveM = 0;
 
+        flagGrabM = false;
+    }
 }
 
 void GameFunctions::wing()
