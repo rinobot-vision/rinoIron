@@ -97,7 +97,7 @@ private:
     bool flagKickBall = false;
     bool penaultyPermission = false;
     bool flagGrab = false;
-    float defenderLine = 38;
+    float defenderLine = 35;
     float volanteLine = 38;
     float offLine = 115;
     int strategy;

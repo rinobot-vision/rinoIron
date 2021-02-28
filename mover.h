@@ -43,7 +43,7 @@ public:
     void atkSituationInv();
     float twiddle();
     clock_t clockStart;
-    float vMax = 70;
+    float vMax = 63;
     float kp;
     float kd;
     float alphaS;

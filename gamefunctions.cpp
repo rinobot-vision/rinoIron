@@ -505,42 +505,51 @@ void GameFunctions::striker()
         kickBall();
         setAtkSituation(true);
     }
-//    float auxx, auxy;
-////    cout << "META STRIKER: (" << goal.x << "," << goal.y << ")" << endl;
-//    if (tempoRepulsive == 0)
-//    {
-//        cout << "entrou aqui?" << endl;
-//        ClockStartR = clock();
-//        StrikeRepulsive = Point2f(teamRobot[indexRobot].getDataState().pos.x,teamRobot[indexRobot].getDataState().pos.y);
-//        cout << "StrikeRepulsive (" << teamRobot[indexRobot].getDataState().pos.x << ","  << teamRobot[indexRobot].getDataState().pos.y << ")" << endl;
-//    }
-//    tempoRepulsive = (double) (clock() - ClockStartR)/CLOCKS_PER_SEC;
+//    cout << "META STRIKER: (" << goal.x << "," << goal.y << ")" << endl;
+    if (tempoRepulsive == 0)
+    {
+        cout << "entrou aqui?" << endl;
+        ClockStartR = clock();
+        tempoStopRepulsive = 0;
+        flagGrab = false;
+        StrikeRepulsive = robot.pos;
+    }
+    tempoRepulsive = (double) (clock() - ClockStartR)/CLOCKS_PER_SEC;
 //    cout  << "tempo repulsive: " << tempoRepulsive << endl;
-//    if (tempoRepulsive >= 3){
+    if (tempoRepulsive >= 3){
 //        cout << "dist: " << euclidean_dist(StrikeRepulsive, robot.pos) << endl;
 //        cout << "StrikeRepulsive (" << StrikeRepulsive.x << ","  << StrikeRepulsive.y << ")" << endl;
 //        cout << "robot (" << robot.pos.x << ","  << robot.pos.y << ")" << endl;
-//        if (euclidean_dist(StrikeRepulsive, robot.pos) <= 2)
-//        {
-//            k_larg = 0.1;
-//            thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), goal);
-//            if(tempoStopRepulsive == 0){
-//                ClockStopR = clock();
-//            }
-//        }
-//        else
-//        {
-//            tempoRepulsive = 0;
-//        }
-//    }
-//    tempoStopRepulsive = (double) (clock() - ClockStopR)/CLOCKS_PER_SEC;
-////    cout << tempoStopRepulsive << endl;
-//    if (tempoStopRepulsive >= 3)
-//    {
-//        cout << "REINICIA REPULSIVE" << endl;
-//        tempoRepulsive = 0;
-//        tempoStopRepulsive = 0;
-//    }
+        if (euclidean_dist(StrikeRepulsive, robot.pos) <= 5 || flagGrab == true)
+        {
+            cout << "REPULSIVE" << endl;
+            k_larg = 0.01;
+            thePhi = ajustaAngulo(thePhi + 90);
+            cout << "thePHI: " << thePhi << endl;
+            if(flagGrab == false){
+                cout << "iniciou stop clock" << endl;
+                ClockStopR = clock();
+            }
+            flagGrab = true;
+        }
+        else
+        {
+            tempoRepulsive = 0;
+        }
+    }
+      if(flagGrab == true){
+      tempoStopRepulsive = (double) (clock() - ClockStopR)/CLOCKS_PER_SEC;
+      }
+//    cout << tempoStopRepulsive << endl;
+    if (tempoStopRepulsive >= 0.5)
+    {
+        cout << "REINICIA REPULSIVE" << endl;
+        tempoRepulsive = 0;
+        tempoStopRepulsive = 0;
+
+        flagGrab = false;
+    }
+
 }
 
 void GameFunctions::defender()

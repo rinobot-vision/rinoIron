@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
     ActuatorClient *actuatorClient = new ActuatorClient("127.0.0.1", 20011);
 
     // Setting our color as BLUE at left side
-    VSSRef::Color ourColor = VSSRef::Color::BLUE;
+    VSSRef::Color ourColor = VSSRef::Color::YELLOW;
     bool ourSideIsLeft;
 
     if(ourColor == VSSRef::Color::BLUE){
@@ -100,6 +100,7 @@ int main(int argc, char *argv[]) {
             bola.pos.x = fabs((-length+ball.x())*100);
             bola.pos.y = fabs((-width+ball.y())*100);
         }
+
         if(ourColor == VSSRef::Color::BLUE){
             bola.vel = Point2f(ball.vx()*100,ball.vy()*100);
         }
@@ -139,10 +140,14 @@ int main(int argc, char *argv[]) {
         GameWindow.updateInfo(Vision->getRobots(),Vision->getEnemy(),Vision->getCentroidDef(), Vision->getCentroidAtk(), Vision->getBall(), Knn);
 
 
-
         // Sending robot commands for robot 0, 1 and 2
         Point2f Velocidades[3];
         GameWindow.EnviaVelocidades(Velocidades);
+
+//        for(int i = 0; i < 3; i++){
+//            actuatorClient->sendCommand(i, Velocidades[i].x, Velocidades[i].y);
+//        }
+
         if(refereeClient->getLastFoul() == VSSRef::Foul::PENALTY_KICK){
             if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){
                 replacerClient->placeRobot(2, ourSideIsLeft ? 0.30 : -0.1, 0.02, 15);
@@ -183,8 +188,8 @@ int main(int argc, char *argv[]) {
 
         if(refereeClient->getLastFoul() == VSSRef::Foul::FREE_BALL){
             if(refereeClient->getLastFoulQuadrant() == VSSRef::Quadrant::QUADRANT_1){
-                replacerClient->placeRobot(2, ourSideIsLeft ?  0.14 : 0.62, 0.4, 0);
-                replacerClient->placeRobot(0, ourSideIsLeft ?  -0.3 : 0.3, -0.04, 90);
+                replacerClient->placeRobot(2, ourSideIsLeft ?  0.14 : 0.62, 0.4 , 0);
+                replacerClient->placeRobot(0, ourSideIsLeft ?  -0.3  : 0.3, -0.04 , 0);
                 replacerClient->placeRobot(1, ourSideIsLeft ? -0.71 : 0.71, 0.19, 90);
                 replacerClient->sendFrame();
             }
