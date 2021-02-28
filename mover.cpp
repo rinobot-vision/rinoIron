@@ -259,7 +259,7 @@ void Mover::goalkeeper()
         }
         else
         {
-              cout << "Return:" << endl;
+//              cout << "Return:" << endl;
             theta = robotFunctions[indexRobot]->getDirection();
 //            cout << "ANGULO: " << theta << endl;
             alpha = theta - robotAngle;
@@ -538,7 +538,7 @@ void Mover::defender()
         }
         vDelta = vMaxD*1;
         theta = robotFunctions[indexRobot]->getDirection();
-
+        inverte = false;
         if(inverte == true)
         {
             if(robotAngle > theta - 90 && robotAngle < theta + 90)
@@ -723,6 +723,8 @@ void Mover::striker()
 
     float teempo = (float) (clock() - clockStart)/CLOCKS_PER_SEC;
 
+
+
     if(tempoTroca == 0){
 
         if(temp == 0)
@@ -734,7 +736,7 @@ void Mover::striker()
         if(euclidean_dist(robotPos,posTemp) <= 1)
         {
             temp = (float) (clock() - clockInvert)/CLOCKS_PER_SEC;
-            cout<<"temp"<<temp<<endl;
+//            cout<<"temp"<<temp<<endl;
             if(temp >= 3){
                 //   cout<<"tempoo"<<endl;
                 inverte = true;
@@ -791,7 +793,7 @@ void Mover::striker()
     alpha = theta - robotAngle;
     alpha = ajustaAngulo(alpha);
     alphaS = alpha;
-    //        inverte = false;
+    inverte = false;
     if(inverte == false)
     {
         //                    cout << "alpha: " << alpha << endl;
@@ -883,12 +885,12 @@ void Mover::striker()
                 alpha = ajustaAngulo(alpha);
                 if (fabs(alpha) <= limiarTheta)
                 {
-                    w = 3*kp*alpha/180;
+                    w = kp*alpha/180;
                 }
                 else
                 {
                     alpha = ajustaAngulo(alpha+180);
-                    w = 3*kp*alpha/180;
+                    w = kp*alpha/180;
                 }
             }
         }

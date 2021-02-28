@@ -96,11 +96,17 @@ private:
     bool flagGoAhead = false;
     bool flagKickBall = false;
     bool penaultyPermission = false;
+    bool flagGrab = false;
     float defenderLine = 38;
     float volanteLine = 38;
     float offLine = 115;
     int strategy;
+    clock_t ClockStartR;
+    clock_t ClockStopR;
     float lastX = defenderLine;
+    Point2f StrikeRepulsive;
+    double tempoRepulsive = 0;
+    double tempoStopRepulsive = 0;
 
 };
 
