@@ -3,7 +3,6 @@
 GameFunctions::GameFunctions()
 {
 
-
 }
 
 GameFunctions::~GameFunctions(){
@@ -33,13 +32,10 @@ void GameFunctions::run()
         case WING:
             wing();
             break;
-        case VOLANTE:
-            volante();
-            break;
         case LIBERO:
             libero();
             break;
-         case OFFDEFENDER:
+        case OFFDEFENDER:
             offdefender();
             break;
         default:
@@ -49,6 +45,47 @@ void GameFunctions::run()
             PlotPath(1, teamRobot[indexRobot]);
     }
 }
+
+float GameFunctions::getgSizeW()
+{
+    return gSizeW;
+}
+
+void GameFunctions::setgSizeW(float a)
+{
+    gSizeW = a;
+}
+
+float GameFunctions::getdeW()
+{
+    return deW;
+}
+
+void GameFunctions::setdeW(float a)
+{
+    deW = a;
+}
+
+float GameFunctions::getkrW()
+{
+    return KrW;
+}
+
+void GameFunctions::setkrW(float a)
+{
+    KrW = a;
+}
+
+float GameFunctions::getkLarg()
+{
+    return k_larg;
+}
+
+void GameFunctions::setkLarg(float a)
+{
+    k_larg = a;
+}
+
 
 void GameFunctions::setRobots(vector<robot> robots)
 {
@@ -160,9 +197,7 @@ bool GameFunctions::getAgainsTheTeam()
 
 void GameFunctions::striker()
 {
-//    dataState robot = teamRobot[indexRobot].getDataState();
-//    goal = ball.pos;
-//    thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos,goal);
+    // Quando a bola estiver no ataque e o atacante estiver atrás do defender, ele desvia dele.
 
     flagGoAhead = false;
     setStopOnGoal(false);
@@ -179,7 +214,6 @@ void GameFunctions::striker()
         goalk = teamRobot[1].getDataState();
     else if (teamRobot[2].getFunction() == GOALKEEPER)
         goalk = teamRobot[2].getDataState();
-
     float time;
     if(ball.vel.x > 0 && euclidean_dist(teamRobot[indexRobot].getDataState().pos, ball.pos)>12)
         time = 0.07;
@@ -192,9 +226,9 @@ void GameFunctions::striker()
     if (robot.pos.x > goal.x)
         gSize = 0;
     else
-        gSize = gSizeW;
+        gSize = 0.6;
 
-    if(ball.pos.x < centroidDef.x + 24 && ball.pos.y < centroidDef.y + 40 && ball.pos.y > centroidDef.y - 40 && againstTheTeam == false )
+    if(ball.pos.x < centroidDef.x + defenderLine && ball.pos.y < centroidDef.y + 40 && ball.pos.y > centroidDef.y - 40 && againstTheTeam == false )
     {
         goal.x = centroidDef.x + 24;
         goal.y = ball.pos.y;
@@ -243,9 +277,9 @@ void GameFunctions::striker()
             float cat_op = cat_ad*tan(theta*PI/180);
 
             minLimit.x = centroidAtk.x;
-            minLimit.y = 50;
+            minLimit.y = 55;
             maxLimit.x = centroidAtk.x;
-            maxLimit.y = 80;
+            maxLimit.y = 75;
 
             Point2f ang_point;
             if(ball.pos.y < robot.pos.y)
@@ -261,7 +295,7 @@ void GameFunctions::striker()
                 atkPoint = ang_point;
                 setAtkSituation(true);
                 flagGoAhead = true;
-                thetaDir = 0;
+                //thetaDir = 0;
             }
             else
             {
@@ -269,18 +303,18 @@ void GameFunctions::striker()
                 {
                     if(ang_point.y > 80)
                     {
-                        //thetaDir = angleTwoPoints(ball.pos,minLimit)*PI/180;
-                        atkPoint = minLimit;
-                        thetaDir = 0;
-                        atkPoint = centroidAtk;
+                        thetaDir = angleTwoPoints(ball.pos,maxLimit)*PI/180;
+                        atkPoint = maxLimit;
+                        //thetaDir = 0;
+                        //atkPoint = centroidAtk;
                     }
                     else if(ang_point.y < 50)
 
                     {
-                        //thetaDir = angleTwoPoints(ball.pos,maxLimit)*PI/180;
-                        atkPoint = maxLimit;
-                        thetaDir = 0;
-                        atkPoint = centroidAtk;
+                        thetaDir = angleTwoPoints(ball.pos,minLimit)*PI/180;
+                        atkPoint = minLimit;
+                        //thetaDir = 0;
+                        //atkPoint = centroidAtk;
                     }
                     else
                     {
@@ -414,15 +448,6 @@ void GameFunctions::striker()
         }
     }
 
-    //    if(getPenalty() == 1)
-    //    {
-    //        setKickState(true);
-    //        setAtkSituation(false);
-    //    }
-    //    else {
-    //        setKickState(false);
-    //    }
-
     dataState robotAux;
     Point2f defender;
     if (teamRobot[0].getFunction() == DEFENDER)
@@ -431,18 +456,6 @@ void GameFunctions::striker()
         defender = teamRobot[1].getDataState().pos;
     else if (teamRobot[2].getFunction() == DEFENDER)
         defender = teamRobot[2].getDataState().pos;
-
-    //    int r = 2;
-    //    float dist = euclidean_dist(robot.pos,ball.pos);
-    //    if(dist <= 10 && robot.pos.x < ball.pos.x)
-    //    {
-    //        cout << "ok" << endl;
-    //        goal.x = goal.x + r*cos(thetaDir);
-    //        goal.y = goal.y + r*sin(thetaDir);
-    //    }
-    //    else {
-    //        cout << "not ok" << endl;
-    //    }
 
     if (ball.pos.x < centroidDef.x + defenderLine)
     {
@@ -505,7 +518,7 @@ void GameFunctions::striker()
         kickBall();
         setAtkSituation(true);
     }
-//    cout << "META STRIKER: (" << goal.x << "," << goal.y << ")" << endl;
+
     if (tempoRepulsive == 0)
     {
         cout << "entrou aqui?" << endl;
@@ -515,11 +528,11 @@ void GameFunctions::striker()
         StrikeRepulsive = robot.pos;
     }
     tempoRepulsive = (double) (clock() - ClockStartR)/CLOCKS_PER_SEC;
-//    cout  << "tempo repulsive: " << tempoRepulsive << endl;
+    //    cout  << "tempo repulsive: " << tempoRepulsive << endl;
     if (tempoRepulsive >= 3){
-//        cout << "dist: " << euclidean_dist(StrikeRepulsive, robot.pos) << endl;
-//        cout << "StrikeRepulsive (" << StrikeRepulsive.x << ","  << StrikeRepulsive.y << ")" << endl;
-//        cout << "robot (" << robot.pos.x << ","  << robot.pos.y << ")" << endl;
+        //        cout << "dist: " << euclidean_dist(StrikeRepulsive, robot.pos) << endl;
+        //        cout << "StrikeRepulsive (" << StrikeRepulsive.x << ","  << StrikeRepulsive.y << ")" << endl;
+        //        cout << "robot (" << robot.pos.x << ","  << robot.pos.y << ")" << endl;
         if (euclidean_dist(StrikeRepulsive, robot.pos) <= 5 || flagGrab == true)
         {
             cout << "REPULSIVE" << endl;
@@ -537,10 +550,10 @@ void GameFunctions::striker()
             tempoRepulsive = 0;
         }
     }
-      if(flagGrab == true){
-      tempoStopRepulsive = (double) (clock() - ClockStopR)/CLOCKS_PER_SEC;
-      }
-//    cout << tempoStopRepulsive << endl;
+    if(flagGrab == true){
+        tempoStopRepulsive = (double) (clock() - ClockStopR)/CLOCKS_PER_SEC;
+    }
+    //    cout << tempoStopRepulsive << endl;
     if (tempoStopRepulsive >= 0.5)
     {
         cout << "REINICIA REPULSIVE" << endl;
@@ -587,7 +600,6 @@ void GameFunctions::defender()
             de = deW;
             Kr = KrW;
             thetaDir = 55.0;
-            //            cout << "UM" << endl;
         }
         else if(ball.pos.y > 100)
         {
@@ -597,14 +609,12 @@ void GameFunctions::defender()
             de = deW;
             Kr = KrW;
             thetaDir = -55.0;
-            //            cout << "DOIS" << endl;
         }
 
         else
         {
             goal.x = defenderLine + centroidDef.x;
             goal.y = ball.pos.y;
-            //            cout << "TRES" << endl;
             if(ball.pos.x < centroidDef.x + 15)
             {
                 if(ball.pos.y > centroidDef.y)
@@ -639,12 +649,10 @@ void GameFunctions::defender()
             if(flagKickBall)
             {
                 univectorField(robot, Point2f(0,0));
-                //                cout << "uni" << endl;
             }
             else
             {
                 thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos,goal);
-                //                cout << "duni" << endl;
             }
         }
     }
@@ -654,44 +662,93 @@ void GameFunctions::defender()
 
 void GameFunctions::goalkeeper()
 {
+    float distXballgkp;
+    float previsionTime;
+    float previsionYball;
+    distXballgkp = ball.pos.x - (centroidDef.x +11);
+    if(fabs(ball.vel.x ) < 30)
+    {
+        previsionTime = 0;
+    }
+    else
+    {
+        previsionTime = (distXballgkp / ball.vel.x);
+    }
+
+    previsionYball = (ball.vel.y * previsionTime) + ball.pos.y;
+    Point2f defenderPos;
+    if(teamRobot[0].getFunction() == DEFENDER)
+    {
+        defenderPos = teamRobot[0].getDataState().pos;
+    }
+    else if(teamRobot[1].getFunction() == DEFENDER)
+    {
+        defenderPos = teamRobot[1].getDataState().pos;
+    }
+    else if(teamRobot[2].getFunction() == DEFENDER)
+    {
+        defenderPos = teamRobot[2].getDataState().pos;
+    }
 
     if(ball.pos.x < centroidDef.x + 90)
     {
-        if(ball.pos.y < centroidDef.y - 20)
+        if(previsionYball < centroidDef.y - 20)
         {
-            goal.x = centroidDef.x + 5;
+            goal.x = centroidDef.x + 7;
             goal.y = centroidDef.y - 15;
         }
-        else if(ball.pos.y > centroidDef.y + 20)
+        else if(previsionYball> centroidDef.y + 20)
         {
-            goal.x = centroidDef.x + 5;
+            goal.x = centroidDef.x + 7;
             goal.y = centroidDef.y + 15;
         }
         else
         {
-            goal.x = centroidDef.x + 5;
+            goal.x = centroidDef.x + 7;
             goal.y = ball.pos.y;
         }
     }
     else
     {
-        goal.x = centroidDef.x + 5;
+        goal.x = centroidDef.x + 7;
         goal.y = centroidDef.y;
     }
 
-    thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos,goal);
-    if(tiroMetaSituation == true)
+    if(ball.pos.x < teamRobot[indexRobot].getDataState().pos.x - 4)
     {
-        kickBall();
+        if(ball.pos.x < centroidDef.x+15)
+        {
+            k_larg = 0.045;
+        }
+        else
+        {
+            k_larg = 0.04;
+        }
+        thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), ball.pos);
     }
-//    cout << "META GOLEIRO: (" << goal.x << "," << goal.y << ")" << endl;
+    else if (defenderPos.x < teamRobot[indexRobot].getDataState().pos.x)
+    {
+        if(ball.pos.x < centroidDef.x+15)
+        {
+            k_larg = 0.045;
+        }
+        else
+        {
+            k_larg = 0.04;
+        }
+        thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), defenderPos);
+    }
+    else
+    {
+        thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos,goal);
+    }
 
 }
 
 void GameFunctions::fake9()
 {
     flagAvoidDefender = false;
-    flagAvoidGoalkepper = false;
+
     float distx = 20;
     float disty = 20;
     dataState robot = teamRobot[indexRobot].getDataState();
@@ -711,24 +768,16 @@ void GameFunctions::fake9()
     else if (teamRobot[2].getFunction() == DEFENDER)
         defender = teamRobot[2].getDataState().pos;
 
-    dataState goalk = teamRobot[indexRobot].getDataState();
-    if (teamRobot[0].getFunction() == GOALKEEPER)
-        goalk = teamRobot[0].getDataState();
-    else if (teamRobot[1].getFunction() == GOALKEEPER)
-        goalk = teamRobot[1].getDataState();
-    else if (teamRobot[2].getFunction() == GOALKEEPER)
-        goalk = teamRobot[2].getDataState();
-
     Point2f defenderMeta;
     defenderMeta.x = centroidDef.x + defenderLine;
     defenderMeta.y = ball.pos.y;
 
-    k_larg = 0.06;
+    k_larg = 0.04;
     goal.x = killer.pos.x - distx;
 
     if(goal.x < defenderMeta.x)
     {
-        k_larg = 0.06;
+        k_larg = 0.04;
         goal.x = defenderMeta.x + 10;
     }
 
@@ -748,25 +797,17 @@ void GameFunctions::fake9()
         }
     }
 
-
-    if(flagAvoidGoalkepper)
+    if(euclidean_dist(robot.pos,defender) < 35)
     {
-        thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), goalk.pos);
+        k_larg = 0.05;
+        flagAvoidDefender = true;
+        thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), defender);
+    }else{
+        if(robot.pos.x < killer.pos.x - 10)
+            thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos,goal);
+        else
+            thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), ball.pos);
     }
-    else
-    {
-        if(euclidean_dist(robot.pos,defender) < 15)
-        {
-            k_larg = 0.04;
-            flagAvoidDefender = true;
-            thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), defender);
-        }else
-            if(robot.pos.x < killer.pos.x - 10)
-                thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos,goal);
-            else
-                thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), ball.pos);
-    }
-//    cout << "META FAKE9: (" << goal.x << "," << goal.y << ")" << endl;
 
 }
 
@@ -775,25 +816,25 @@ void GameFunctions::midfield()
 {
     dataState robot = teamRobot[indexRobot].getDataState();
     float time;
-    time = 0.2;
-
-    if( euclidean_dist(robot.pos, ball.pos) <= 15)
+    Point2f ballPrev;
+    if(ball.vel.y == 0)
     {
-        time = 0.01;
+        time = 0;
+        ballPrev = ball.pos;
+    }
+    else
+    {
+        time = fabs((robot.pos.y - ball.pos.y)/ball.vel.y);
+        ballPrev = Point2f((ball.pos.x - 2.5) + time * ball.vel.x , robot.pos.y);
     }
 
-    //time = 0.0001*(robot.pos.y - ball.pos.y)*ball.vel.y;
     setAtkSituation(false);
     setCrossing(false);
-    //    cout << "time: "<< time << endl;
-
-    Point2f ballPrev= Point2f(ball.pos.x + time*ball.vel.x, ball.pos.y + time*ball.vel.y);
 
     Point2f aux, minLimit, maxLimit;
     aux.x = centroidAtk.x;
     aux.y = robot.pos.y;
     float theta = angleTwoPoints(ball.pos,robot.pos);
-    float alpha = angleTwoPoints(robot.pos,ball.pos);
     float cat_ad = euclidean_dist(robot.pos,aux);
     float cat_op = cat_ad*tan(theta*PI/180);
 
@@ -814,7 +855,7 @@ void GameFunctions::midfield()
     {
         setAtkSituation(true);
     }
-    if((robot.pos.x < ball.pos.x) && (ball.pos.y < 110) && (ball.pos.y > 20))
+    if((robot.pos.x < ball.pos.x) && (ball.pos.y < 95) && (ball.pos.y > 35))
     {
         goal = ballPrev;
         setCrossing(true);
@@ -826,6 +867,8 @@ void GameFunctions::midfield()
     }
     else
     {
+        flagMidWaiting = true;
+
         if(ball.pos.x < robot.pos.x)
         {
 
@@ -835,67 +878,51 @@ void GameFunctions::midfield()
             if(ball.pos.y>centroidAtk.y)
             {
                 goal.x=centroidAtk.x-45;
-                goal.y=centroidAtk.y+20;
+                goal.y=centroidAtk.y- 5;
             }
             else
             {
                 goal.x=centroidAtk.x-45;
-                goal.y=centroidAtk.y-20;
+                goal.y=centroidAtk.y+ 5;
             }
-            //goal.x = centroidAtk.x - 60;
-            //goal.y = centroidAtk.y;
         }
     }
 
-    //        gSize = gSizeW;
-    //        de = deW;
-    //        Kr = KrW;
-    //        thetaDir = 0;
-
-    //          univectorField(robot, Point2f(0,0));
     thePhi = angleTwoPoints(robot.pos,goal);
-//    cout << "META MIELDFIELD: (" << goal.x << "," << goal.y << ")" << endl;
+
     if (tempoRepulsiveM == 0)
     {
-        cout << "entrou aqui?" << endl;
         ClockStartRM = clock();
         tempoStopRepulsiveM = 0;
         flagGrabM = false;
         StrikeRepulsiveM = robot.pos;
     }
     tempoRepulsiveM = (double) (clock() - ClockStartRM)/CLOCKS_PER_SEC;
-//    cout  << "tempo repulsive: " << tempoRepulsive << endl;
-    if (tempoRepulsiveM >= 3){
-//        cout << "dist: " << euclidean_dist(StrikeRepulsive, robot.pos) << endl;
-//        cout << "StrikeRepulsive (" << StrikeRepulsive.x << ","  << StrikeRepulsive.y << ")" << endl;
-//        cout << "robot (" << robot.pos.x << ","  << robot.pos.y << ")" << endl;
-        if (euclidean_dist(StrikeRepulsiveM, robot.pos) <= 5 || flagGrabM == true)
-        {
-            cout << "REPULSIVE" << endl;
-            k_larg = 0.01;
-            thePhi = ajustaAngulo(thePhi + 90);
-            cout << "thePHI: " << thePhi << endl;
-            if(flagGrabM == false){
-                cout << "iniciou stop clock" << endl;
-                ClockStopRM = clock();
+    if(flagMidWaiting == false)
+    {
+        if (tempoRepulsiveM >= 3){
+
+            if (euclidean_dist(StrikeRepulsiveM, robot.pos) <= 5 || flagGrabM == true)
+            {
+                thePhi = ajustaAngulo(thePhi + 90);
+                if(flagGrabM == false){
+                    ClockStopRM = clock();
+                }
+                flagGrabM = true;
             }
-            flagGrabM = true;
-        }
-        else
-        {
-            tempoRepulsiveM = 0;
+            else
+            {
+                tempoRepulsiveM = 0;
+            }
         }
     }
-      if(flagGrabM == true){
-      tempoStopRepulsiveM = (double) (clock() - ClockStopRM)/CLOCKS_PER_SEC;
-      }
-//    cout << tempoStopRepulsive << endl;
+    if(flagGrabM == true){
+        tempoStopRepulsiveM = (double) (clock() - ClockStopRM)/CLOCKS_PER_SEC;
+    }
     if (tempoStopRepulsiveM >= 0.5)
     {
-        cout << "REINICIA REPULSIVE" << endl;
         tempoRepulsiveM = 0;
         tempoStopRepulsiveM = 0;
-
         flagGrabM = false;
     }
 }
@@ -910,9 +937,6 @@ void GameFunctions::wing()
     else
         time = 0;
 
-    //    if (robot.pos.x > goal.x)
-    //        gSize = 0;
-    //    else
     gSize = gSizeW;
 
     de = deW;
@@ -943,7 +967,6 @@ void GameFunctions::wing()
         if(robot.pos.x > ball.pos.x)
         {
             de = 1;
-            Kr = 0;
             if(ball.pos.y < 35  && robot.pos.y < ball.pos.y)
             {
                 thetaDir = (-90 * PI / 180);
@@ -969,7 +992,6 @@ void GameFunctions::wing()
         thetaDir = angleTwoPoints(robot.pos,goal)*PI/180;
     }
     univectorField(robot, Point2f(0,0));
-//    cout << "META WING: (" << goal.x << "," << goal.y << ")" << endl;
 
 }
 
@@ -1041,18 +1063,23 @@ void GameFunctions::volante()
 void GameFunctions::libero()
 {
     dataState robot = teamRobot[indexRobot].getDataState();
-    Point2f goal;
+    int striker;
+    for(int i = 0; i < 3; i++)
+    {
+        if(teamRobot[i].getFunction() == STRIKER)
+            striker = i;
+    }
     float time = 0.05;
     Point2f ballPrev= Point2f(ball.pos.x + time*ball.vel.x, ball.pos.y + time*ball.vel.y);
-    int distbola = 30;
-    if(ball.pos.x > defenderLine)
+    ballPrev = ball.pos;
+    int distbola = 40;
+    if(ball.pos.x > 85)
     {
         goal.y = ballPrev.y;
         if(ball.vel.x >= 0)
         {
             goal.x = ballPrev.x - distbola;
             lastX = goal.x;
-            //cout<< "lastX: "<<lastX<<endl;
         }
         else
         {
@@ -1065,51 +1092,81 @@ void GameFunctions::libero()
                 goal.x = ball.pos.x - distbola;
             }
         }
-
-     thetaDir = PI/2;
-     thePhi = angleTwoPoints(robot.pos, goal);
+        if(euclidean_dist(robot.pos, teamRobot[striker].getDataState().pos) < 15)
+        {
+            k_larg = 0.04;
+            thePhi = repulsiveMath(robot,teamRobot[striker].getDataState().pos);
+        }
     }
+    //------------------------------- não está buscando a bola em cimaa!!
     else
     {
-        if(ball.pos.x <= 25)
-        {
-            if(ball.pos.y <= 30)
+        if(ball.pos.x < 47.5){
+            if(ball.pos.y < 30)
             {
-                goal.x = 4;
-                goal.y = 25;
+                goal.x = ball.pos.x;
+                goal.y = ball.pos.y;
+                flagKickBall = true;
+                gSize = gSizeW;
+                de = deW;
+                Kr = KrW;
+                thetaDir = 55.0;
             }
-            if(ball.pos.y >= 100)
+            else if(ball.pos.y > 100)
             {
-                goal.x = 4;
-                goal.y = 105;
+                goal.x = ball.pos.x;
+                goal.y = ball.pos.y;
+                flagKickBall = true;
+                gSize = gSizeW;
+                de = deW;
+                Kr = KrW;
+                thetaDir = -55.0;
             }
-            else
-            {
-                goal.x = 30;
-                goal.y = 25;
-            }
-            thetaDir = PI/2;
-            thePhi = angleTwoPoints(robot.pos, goal);
         }
-        if(ball.pos.x > 25 && ball.pos.x <= defenderLine)
+
+        else
         {
-            goal = ball.pos;
-            thetaDir = 0;
-            univectorField(robot, Point2f(0,0));
+            goal.x = defenderLine + centroidDef.x;
+            goal.y = ball.pos.y;
+            if(ball.vel.x > 0 && ball.pos.x < robot.pos.x)
+            {
+                if(ball.pos.y < robot.pos.y)
+                    goal.y = goal.y + 15;
+                else
+                    goal.y = goal.y - 15;
+            }
+            if(ball.pos.x < centroidDef.x + 15)
+            {
+                if(ball.pos.y > centroidDef.y)
+                {
+                    goal.x = centroidDef.x + 37;
+                    goal.y = centroidDef.y + 42;
+                }
+                else
+                {
+                    goal.x = centroidDef.x + 37;
+                    goal.y = centroidDef.y - 42;
+                }
+            }
         }
     }
+    if(goal.x < (centroidDef.x + 25) &&(goal.y < centroidDef.y + 40 && goal.y > centroidDef.y - 40))
+        goal.x = goal.x + 15;
 
+    thetaDir = PI/2;
+    thePhi = angleTwoPoints(robot.pos, goal);
+    if(flagKickBall)
+        univectorField(robot,Point2f(0,0));
 }
+
 
 void GameFunctions::offdefender()
 {
     dataState robot = teamRobot[indexRobot].getDataState();
     goal.x = centroidDef.x + offLine;
     goal.y = ball.pos.y;
-    thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos, goal);
+    thePhi = angleTwoPoints(robot.pos, goal);
 }
-
-
 
 void GameFunctions::PlotPath(int i, robot robot)
 {
@@ -1248,26 +1305,6 @@ void GameFunctions::PlotPath(int i, robot robot)
     //        cout << "cont: " << cont << endl;
 }
 
-void GameFunctions::AtkPath(robot robot)
-{
-    float ang;
-    dataState virtualRobot;
-    virtualRobot.pos = robot.getDataState().pos;
-    int r = 1;
-    int cont = 0;
-    int state = 0;
-    Point2f enemy = Point2f(0,0);
-
-    while((euclidean_dist(virtualRobot.pos,ball.pos) > 5)&&(cont < 215))//(fabs(virtualRobot.pos.x - goal.x) > 1) && (fabs(virtualRobot.pos.y - goal.y) > 1))
-    {
-        AddAtkPoint(virtualRobot.pos);
-        ang = (ajustaAngulo(univectorFieldForPlot(virtualRobot,enemy)))*PI/180;
-        virtualRobot.pos.x = virtualRobot.pos.x + r*cos(ang);
-        virtualRobot.pos.y = virtualRobot.pos.y + r*sin(ang);
-        cont++;
-    }
-}
-
 void GameFunctions::setPlot(bool state)
 {
     plotState = state;
@@ -1321,15 +1358,6 @@ void GameFunctions::setFreeBall(bool state)
 bool GameFunctions::getFreeball()
 {
     return freeBallSituation;
-}
-void GameFunctions::setTiroMeta(bool state)
-{
-    tiroMetaSituation = state;
-}
-
-bool GameFunctions::getTiroMeta()
-{
-    return tiroMetaSituation;
 }
 
 void GameFunctions::setlittleChute(bool state)
