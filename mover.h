@@ -37,27 +37,37 @@ public:
     void rotate();
     void rotateInv();
     void kickRotate();
-    void kickPenalty();
     void updateGains();
     void atkSituation();
     void atkSituationInv();
     float twiddle();
-    clock_t clockStart;
-    float vMax = 63;
+    void rotate_def();
+
+    float vMax = 70;
     float kp;
     float kd;
-    float alphaS;
+    float temp = 0;
+    float tempoTroca = 0;
+
     Point2f posTemp;
     Point2f prevGoal;
-    float temp = 0;
+
     bool inverte=false;
-    clock_t clockInvert, clockTroca, clockAceleration;
-    float tempoTroca = 0;
     bool sentido = false;
+
+    clock_t clockInvert, clockTroca, clockAceleration;
+    clock_t clockStart;
+
+
     void setStrategy(int);
     int getStrategy();
-    void kickGoalKeeper();
     void setIndex(int);
+    float getKp();
+    void setKp(float a);
+    float getKd();
+    void setKd(float a);
+
+
     ~Mover();
 protected:
     void run();
@@ -65,27 +75,18 @@ private:
     GameFunctions *robotFunctions[NUMROBOTS];
     QMutex mutex;
     vector<robot> teamRobot;
-    int indexRobot;
+    Point2f lastRobot;
     Point2f centroidDef, centroidAtk;
     dataState ball;
     MatrixXd robotGains;
 
-    float l = 0.02;
+    float l = 0.04;
     float alpha;
     float lastAlpha;
     float lastVel;
-
-    bool robotDirection = true;
-    int robotObstCont = 0;
-    int robotTimeCont = 0;
-    Point2f lastRobot;
-
-    bool againstTheTeam = false;
-    bool firstAceleration = true;
-    bool airball;
-
+    float alphaS;
     float offLine = 115;
-    float distGiro = 6;
+    float distGiro = 9;
     float distGiroGoleiro = 8;
     float velGiroLado = 0.8;
     float velGiroAtk = 0.5;
@@ -94,7 +95,18 @@ private:
     float lVel;
     float rVel;
 
+    int indexRobot;
+    int robotObstCont = 0;
+    int robotTimeCont = 0;
     int strategy;
+
+    bool robotDirection = true;
+    bool againstTheTeam = false;
+    bool firstAceleration = true;
+    bool airball;
+
+
+
 };
 
 #endif // MOVER_H
