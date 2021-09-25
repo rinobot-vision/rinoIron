@@ -5,7 +5,6 @@
 #include "navigation.h"
 #include "robot.h"
 
-
 class GameFunctions: public Navigation
 {
 public:
@@ -27,10 +26,7 @@ public:
     bool getAtkSituationTiro();
     bool getCrossing();
     bool getAtkSituationInv();
-    bool airball;
     void setStopOnGoal(bool);
-    clock_t speedmf;
-    bool fedUp;
     bool getStopOnGoal();
     void striker();
     void defender();
@@ -40,11 +36,9 @@ public:
     void wing();
     void volante();
     void libero();
+    void newstriker();
     void offdefender();
-
-
     void PlotPath(int i, robot);
-    void AtkPath(robot);
     void setPlot(bool );
     bool getPlot();
     void setKickState(bool );
@@ -61,24 +55,31 @@ public:
     void setIndex(int);
     Point2f getGoal();
     float getDirection();
-    Point2f atkPoint;
     ~GameFunctions();
     int getStrategy();
     void setStrategy(int);
 
+    bool airball;
+    bool fedUp;
+
+    Point2f atkPoint;
+    clock_t speedmf;
     vector<robot> teamRobot;
 
-
+    float getgSizeW();
+    void setgSizeW(float a);
+    float getdeW();
+    void setdeW(float a);
+    float getkrW();
+    void setkrW(float a);
+    float getkLarg();
+    void setkLarg(float a);
 
 
 protected:
     void run();
-private:
-    int indexRobot;
-    Point2f centroidDef, centroidAtk;
-    dataState ball;
 
-    bool tiroMetaSituation = false;
+private:
     bool littleChuteSituation = false;
     bool freeBallSituation = false;
     bool penaltiSituation = false;
@@ -89,6 +90,7 @@ private:
     bool flagAvoidDefender = false;
     bool flagAvoidBall = false;
     bool flagStopOnGoal = false;
+    bool flagMidWaiting = false;
     bool atkSituationInv = false;
     bool againstTheTeam = false;
     bool plotState = false;
@@ -99,22 +101,29 @@ private:
     bool flagGrab = false;
     bool flagGrabM = false;
 
-    float defenderLine = 35;
+    float defenderLine = 38;
     float volanteLine = 38;
-    float offLine = 115;
-    int strategy;
-    clock_t ClockStartR;
-    clock_t ClockStopR;
     float lastX = defenderLine;
+    float offLine = 115;
+
+    int strategy;
+    int indexRobot;
+
+    dataState ball;
+    Point2f StrikeRepulsiveM;
     Point2f StrikeRepulsive;
+
+    Point2f centroidDef, centroidAtk;
+
     double tempoRepulsive = 0;
     double tempoStopRepulsive = 0;
-
-    Point2f StrikeRepulsiveM;
     double tempoRepulsiveM = 0;
     double tempoStopRepulsiveM = 0;
+
     clock_t ClockStartRM;
     clock_t ClockStopRM;
+    clock_t ClockStartR;
+    clock_t ClockStopR;
 
 };
 
