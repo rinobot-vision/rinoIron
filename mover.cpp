@@ -664,6 +664,8 @@ void Mover::defendershield()
     float robotAngle = teamRobot[indexRobot].getDataState().angle;
     float v,w,theta;
 
+    prevGoal = GameFunctions().getGoal();
+
     theta = angleTwoPoints(robotPos, prevGoal);
     alpha = theta - robotAngle;
     alpha = ajustaAngulo(alpha);

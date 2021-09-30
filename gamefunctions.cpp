@@ -838,6 +838,7 @@ void GameFunctions::fake9()
         else
             thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), ball.pos);
     }
+    cout<< "Meta fake 9: "<<goal.x<< ","<<goal.y<<endl;
 
 }
 
