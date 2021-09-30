@@ -319,7 +319,7 @@ void Mover::defender()
     float limiarTheta = 90;
     float deltaLimiar = 30;
     float vPrev, vDeltaPrev;
-    float distGiroGol = 10;
+    float distGiroGol = 8;
     float velGiroGol = 1.0;
 
     airball = false;
@@ -1510,35 +1510,38 @@ void Mover::libero()
     lastAlpha = alpha;
     lastVel = robotVel;
 
-    int distGiro = 10;
+    int distGiroGol = 8;
     if(ball.pos.x < centroidDef.x + 15)
-        distGiro = 8;
+        distGiroGol = 8;
 
     // Quando a bola está no campo de defesa, o líbero jogará a bola para os cantos do campo, mas quando estiver no campo de ataque o mesmo a jogará para o centro do campo
-    if( ball.pos.x <= 85)
+    if(euclidean_dist(ball.pos,robotPos) < distGiroGol)
     {
-        if((ball.pos.y >= centroidAtk.y) && (euclidean_dist(ball.pos,robotPos) < distGiro))
+        if(robotPos.x < ball.pos.x)
         {
-            lVel = -100;
-            rVel = 100;
+            if(robotPos.y > ball.pos.y)
+            {
+                lVel = -velGiroGol*100;
+                rVel = velGiroGol*100;
+            }
+            else if(robotPos.y < ball.pos.y)
+            {
+                lVel = velGiroGol*100;
+                rVel = -velGiroGol*100;
+            }
         }
-        else if((ball.pos.y < centroidAtk.y) && (euclidean_dist(ball.pos,robotPos) < distGiro))
+        else
         {
-            lVel = 100;
-            rVel = -100;
-        }
-    }
-    else
-    {
-        if((ball.pos.y < centroidAtk.y) && (euclidean_dist(ball.pos,robotPos) < distGiro))
-        {
-            lVel = -100;
-            rVel = 100;
-        }
-        else if((ball.pos.y >= centroidAtk.y) && (euclidean_dist(ball.pos,robotPos) < distGiro))
-        {
-            lVel = 100;
-            rVel = -100;
+            if(ball.pos.y > centroidDef.y + 40)
+            {
+                lVel = velGiroGol*100;
+                rVel = -velGiroGol*100;
+            }
+            else if(ball.pos.y < centroidDef.y - 40)
+            {
+                lVel = -velGiroGol*100;
+                rVel = velGiroGol*100;
+            }
         }
     }
 }

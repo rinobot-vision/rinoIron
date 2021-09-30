@@ -301,14 +301,14 @@ void GameFunctions::striker()
             {
                 if(robot.pos.x < ball.pos.x)
                 {
-                    if(ang_point.y > 80)
+                    if(ang_point.y <50)
                     {
                         thetaDir = angleTwoPoints(ball.pos,maxLimit)*PI/180;
                         atkPoint = maxLimit;
                         //thetaDir = 0;
                         //atkPoint = centroidAtk;
                     }
-                    else if(ang_point.y < 50)
+                    else if(ang_point.y > 80)
 
                     {
                         thetaDir = angleTwoPoints(ball.pos,minLimit)*PI/180;
@@ -1145,7 +1145,7 @@ void GameFunctions::libero()
             }
         }
     }
-    if(goal.x < (centroidDef.x + 25) &&(goal.y < centroidDef.y + 40 && goal.y > centroidDef.y - 40))
+    if(goal.x < (centroidDef.x + 25) &&(goal.y < centroidDef.y + 20 && goal.y > centroidDef.y - 20))
         goal.x = goal.x + 15;
 
     thetaDir = PI/2;

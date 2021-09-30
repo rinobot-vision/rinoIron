@@ -39,6 +39,7 @@
 //  1 = FULL_ATK
 //  2 = SAFE_FULL_ATK
 //  3 = NS
+//  4 = FIXED_2
 //  5 = KNN
 //  6 - OFF
 
