@@ -16,6 +16,7 @@ public:
     float getRVel();
     void goalkeeper();
     void defender();
+    void defender2();
     void striker();
     void fake9();
     void defendershield();
@@ -79,7 +80,7 @@ private:
     float lastVel;
     float alphaS;
     float offLine = 115;
-    float distGiro = 9;
+    float distGiro = 7;
     float distGiroGoleiro = 8;
     float velGiroLado = 0.8;
     float velGiroAtk = 0.5;
@@ -87,6 +88,7 @@ private:
     float velGiroPenalty = 2;
     float lVel;
     float rVel;
+    float defenderline2 = 55;
 
     int indexRobot;
     int robotObstCont = 0;

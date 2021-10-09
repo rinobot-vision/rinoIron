@@ -8,6 +8,7 @@
 #define STRIKER 2
 #define FAKE9 3
 #define DEFENDERSHIELD 4
+#define DEFENDER2 5
 #define STRIKERAGAINSTEAM 8
 
 

@@ -30,6 +30,7 @@ public:
     bool getStopOnGoal();
     void striker();
     void defender();
+    void defender2();
     void goalkeeper();
     void fake9();
     void defendershield();
@@ -96,7 +97,8 @@ private:
     bool flagGrab = false;
     bool flagGrabM = false;
 
-    float defenderLine = 38;
+    float defenderLine = 95;
+    float defenderLine2 = 55;
     float volanteLine = 38;
     float lastX = defenderLine;
     float offLine = 115;

@@ -18,6 +18,10 @@
 
 using namespace std;
 
+//Melhorar ajusta angulo
+//Posicionamento
+//Robos na grande área
+
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
 
@@ -92,7 +96,9 @@ int main(int argc, char *argv[]) {
         }
         if(ourColor == VSSRef::Color::YELLOW){
             robots_n =  detection.robots_yellow_size();
+            cout<<robots_n<<endl;
         }
+        //cout<< "numero de robos: "<< detection.robots_yellow_size();
         if(ourColor == VSSRef::Color::BLUE){
             bola.pos.x = (length+ball.x())*100;
             bola.pos.y = (width+ball.y())*100;
@@ -136,7 +142,7 @@ int main(int argc, char *argv[]) {
 
         Vision->setBall(bola);
         Vision->setRobots(rinobot); //___
-
+        if(robots_n != 0)
         GameWindow.updateInfo(Vision->getRobots(),Vision->getEnemy(),Vision->getCentroidDef(), Vision->getCentroidAtk(), Vision->getBall(), Knn);
 
 
@@ -187,9 +193,9 @@ int main(int argc, char *argv[]) {
         if(refereeClient->getLastFoul() == VSSRef::Foul::KICKOFF){
             replacerClient->placeRobot(4, ourSideIsLeft ? -0.85 : 0.85, 0, 90);
             replacerClient->placeRobot(3, ourSideIsLeft ? -0.40 : 0.40, -0.4, 0);
-            replacerClient->placeRobot(2, ourSideIsLeft ? -1.10 : 1.10, 0, 90);
+            replacerClient->placeRobot(0, ourSideIsLeft ? -1.10 : 1.10, 0, 90);
             replacerClient->placeRobot(1, ourSideIsLeft ? -0.40 : 0.40, 0.4, 90);
-            replacerClient->placeRobot(0, ourSideIsLeft ? -0.29 : 0.29, 0, -15);
+            replacerClient->placeRobot(2, ourSideIsLeft ? -0.29 : 0.29, 0, -15);
             replacerClient->sendFrame();
         }
 

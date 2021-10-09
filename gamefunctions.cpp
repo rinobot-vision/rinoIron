@@ -28,6 +28,10 @@ void GameFunctions::run()
             break;
         case DEFENDERSHIELD:
             defendershield();
+            break;
+        case DEFENDER2:
+            defender2();
+            break;
         default:
             break;
         }
@@ -520,12 +524,12 @@ void GameFunctions::striker()
     if (tempoRepulsive >= 3){
         if (euclidean_dist(StrikeRepulsive, robot.pos) <= 5 || flagGrab == true)
         {
-            cout << "REPULSIVE" << endl;
+            //cout << "REPULSIVE" << endl;
             k_larg = 0.01;
             thePhi = ajustaAngulo(thePhi + 90);
-            cout << "thePHI: " << thePhi << endl;
+            //cout << "thePHI: " << thePhi << endl;
             if(flagGrab == false){
-                cout << "iniciou stop clock" << endl;
+                //cout << "iniciou stop clock" << endl;
                 ClockStopR = clock();
             }
             flagGrab = true;
@@ -541,7 +545,7 @@ void GameFunctions::striker()
 
     if (tempoStopRepulsive >= 0.5)
     {
-        cout << "REINICIA REPULSIVE" << endl;
+        //cout << "REINICIA REPULSIVE" << endl;
         tempoRepulsive = 0;
         tempoStopRepulsive = 0;
 
@@ -598,6 +602,8 @@ void GameFunctions::defendershield()
         goal.x = centroidDef.x + (28*cos(ballAngle));
         goal.y = centroidDef.y + (32.5*sin(ballAngle));
     }
+
+    thePhi = angleTwoPoints(defendershield.pos, goal);
 }
 
 void GameFunctions::defender()
@@ -691,6 +697,96 @@ void GameFunctions::defender()
     }
 }
 
+void GameFunctions::defender2()
+{
+    flagAvoidGoalkepper = false;
+    flagKickBall = false;
+    dataState robot = teamRobot[indexRobot].getDataState();
+    dataState goalk = teamRobot[indexRobot].getDataState();
+
+    for(int i = 0; i < 5; i++)
+    {
+        if (teamRobot[i].getFunction() == GOALKEEPER)
+        {
+            goalk = teamRobot[i].getDataState();
+            break;
+        }
+    }
+
+    if (ball.pos.x > centroidDef.x + defenderLine2)
+    {
+        goal.x = centroidDef.x + defenderLine2;
+        goal.y = ball.pos.y;
+    }
+
+    else
+    {
+        if(ball.pos.y < 50 && ball.pos.x < 50)
+        {
+            flagKickBall = true;
+            gSize = gSizeW;
+            de = deW;
+            Kr = KrW;
+            thetaDir = 55.0;
+        }
+
+        else if(ball.pos.y > 130 && ball.pos.x < 50)
+        {
+            flagKickBall = true;
+            gSize = gSizeW;
+            de = deW;
+            Kr = KrW;
+            thetaDir = -55.0;
+        }
+
+        else
+        {
+            goal.x = ball.pos.x;
+            goal.y = ball.pos.y;
+            thetaDir = 0;
+
+            if(ball.pos.x < centroidDef.x + 35 && ball.pos.y < 130 && ball.pos.y > 50)
+            {
+                if(ball.pos.y > centroidDef.y)
+                {
+                    goal.x = centroidDef.x + 40;
+                    goal.y = centroidDef.y + 45;
+                }
+                else
+                {
+                    goal.x = centroidDef.x + 40;
+                    goal.y = centroidDef.y - 45;
+                }
+            }
+        }
+    }
+
+
+    if(flagAvoidGoalkepper == true)
+    {
+        k_larg = 0.1;
+        thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), goalk.pos);
+    }
+    else if(flagAvoidGoalkepper == false)
+    {
+        if(flagAvoidBall == true)
+        {
+            k_larg = 0.1;
+            thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), ball.pos);
+        }
+        else
+        {
+            if(flagKickBall)
+            {
+                univectorField(robot, Point2f(0,0));
+            }
+            else
+            {
+                thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos,goal);
+            }
+        }
+    }
+}
 
 void GameFunctions::goalkeeper()
 {
@@ -710,13 +806,13 @@ void GameFunctions::goalkeeper()
     previsionYball = (ball.vel.y * previsionTime) + ball.pos.y;
     Point2f defenderPos;
 
-
+    int defenderindex;
     for(int i = 0; i < 5; i++)
     {
         if (teamRobot[i].getFunction() == DEFENDER)
         {
             defenderPos = teamRobot[i].getDataState().pos;
-            indexRobot = i;
+            defenderindex = i;
             break;
         }
     }
@@ -745,35 +841,35 @@ void GameFunctions::goalkeeper()
         goal.y = centroidDef.y;
     }
 
-    //    if(ball.pos.x < teamRobot[indexRobot].getDataState().pos.x - 4)
-    //    {
-    //        if(ball.pos.x < centroidDef.x+15)
-    //        {
-    //            k_larg = 0.045;
-    //        }
-    //        else
-    //        {
-    //            k_larg = 0.04;
-    //        }
-    //        thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), ball.pos);
-    //    }
-    //    else if (defenderPos.x < teamRobot[indexRobot].getDataState().pos.x)
-    //    {
-    //        if(ball.pos.x < centroidDef.x+15)
-    //        {
-    //            k_larg = 0.045;
-    //        }
-    //        else
-    //        {
-    //            k_larg = 0.04;
-    //        }
-    //        thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), defenderPos);
-    //    }
-    //    else
-    //    {
-    //        thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos,goal);
-    //    }
-
+        if(ball.pos.x < teamRobot[indexRobot].getDataState().pos.x - 4)
+        {
+            if(ball.pos.x < centroidDef.x+15)
+            {
+                k_larg = 0.045;
+            }
+            else
+            {
+                k_larg = 0.04;
+            }
+            thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), ball.pos);
+        }
+        else if (defenderPos.x < teamRobot[indexRobot].getDataState().pos.x)
+        {
+            if(ball.pos.x < centroidDef.x+15)
+            {
+                k_larg = 0.045;
+            }
+            else
+            {
+                k_larg = 0.04;
+            }
+            thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), defenderPos);
+        }
+        else
+        {
+            thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos,goal);
+        }
+    //cout<<" Meta x = "<<goal.x<<" Meta y = "<< goal.y<<endl;
 }
 
 void GameFunctions::fake9()
@@ -838,8 +934,6 @@ void GameFunctions::fake9()
         else
             thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), ball.pos);
     }
-    cout<< "Meta fake 9: "<<goal.x<< ","<<goal.y<<endl;
-
 }
 
 

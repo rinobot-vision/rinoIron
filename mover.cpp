@@ -16,7 +16,7 @@ void Mover::run()
 {
     if((int)teamRobot.size() > indexRobot)
     {
-        //updateGains();
+//        updateGains();
         switch (teamRobot[indexRobot].getFunction())
         {
         case GOALKEEPER:
@@ -33,6 +33,10 @@ void Mover::run()
             break;
         case DEFENDERSHIELD:
             defendershield();
+            break;
+        case DEFENDER2:
+            defender2();
+            break;
         default:
             break;
         }
@@ -124,15 +128,15 @@ void Mover::goalkeeper()
 
     float positionY = ball.pos.y + time*ball.vel.y;
 
-    if(positionY < 45)
+    if(positionY < 70)
     {
-        positionY = 45;
+        positionY = 70;
     }
-    else if(positionY > 85)
+    else if(positionY > 110)
     {
-        positionY = 85;
+        positionY = 110;
     }
-
+    //cout<< "Meta goleiro x : "<< GameFunctions().getGoal.x << " y: "<<GameFunctions().getGoal.y<<endl;
     prevGoal = robotPos;
     if (ball.vel.x < -10 && (positionY > centroidDef.y-20) && (positionY < centroidDef.y+20))
     {
@@ -608,8 +612,8 @@ void Mover::defender()
     lVel = (v - w*l)*100;
     rVel = (v + w*l)*100;
 
-    cout<< "lvel: " <<lVel<<endl;
-    cout<< "rvel: " <<rVel<<endl;
+//    cout<< "lvel: " <<lVel<<endl;
+//    cout<< "rvel: " <<rVel<<endl;
 
     lastAlpha = alpha;
     alphaS = alpha;
@@ -646,66 +650,175 @@ void Mover::defender()
 
 }
 
-void Mover::defendershield()
+void Mover::defender2()
 {
-
     float vMaxD = 0.65;
     float vFollow = 0.50;
     float vMaxPrevision = 0.85;
     float vDelta = 1*vMaxD;
     float limiarTheta = 90;
     float deltaLimiar = 30;
-    float vDeltaPrev;
-    float vPrev = 0.4;
-    float distGiroGol = 10;
+    float vPrev, vDeltaPrev;
+    float distGiroGol = 7;
     float velGiroGol = 1.0;
+
+    airball = false;
+
+    if(ball.pos.x < centroidDef.x +15 && ball.pos.y < centroidDef.y + 40 && ball.pos.y > centroidDef.y - 40 && againstTheTeam == false ){
+        airball = true;
+    }
 
     Point2f robotPos = teamRobot[indexRobot].getDataState().pos;
     float robotAngle = teamRobot[indexRobot].getDataState().angle;
     float v,w,theta;
 
-    prevGoal = GameFunctions().getGoal();
+    if(tempoTroca == 0){
 
-    theta = angleTwoPoints(robotPos, prevGoal);
-    alpha = theta - robotAngle;
-    alpha = ajustaAngulo(alpha);
-    if (fabs(alpha) <= limiarTheta)
-    {
-        v = -vDelta * fabs(alpha) / limiarTheta + vPrev;
-        w = kp * alpha / 180 + kd * (alpha - lastAlpha);
-        limiarTheta = 90 - deltaLimiar;
-    }
-    else
-    {
-        alpha = ajustaAngulo(alpha + 180);
-        v = vDelta * fabs(alpha) / limiarTheta - vPrev;
-        w = kp * alpha / 180 + kd * (alpha - lastAlpha);
-        limiarTheta = 90 + deltaLimiar;
-    }
-
-    if ((fabs(robotPos.x - robotFunctions[indexRobot]->getGoal().x) < 2) && (fabs(robotPos.y - robotFunctions[indexRobot]->getGoal().y) < 2))
-    {
-        v = 0;
-        if (fabs(robotAngle) > (angleTwoPoints(robotPos,ball.pos) - 5) && fabs(robotAngle) < (angleTwoPoints(robotPos,ball.pos) + 5))
+        if(temp == 0)
         {
-            w = 0;
+            posTemp = robotPos;
+            clockInvert = clock();
+        }
+
+        if(euclidean_dist(robotPos,posTemp) <= 0.2)
+        {
+            temp = (float) (clock() - clockInvert)/CLOCKS_PER_SEC;
+
+            if(temp >= 3){
+                inverte = true;
+                inverte = false;
+                clockTroca = clock();
+                temp = 0;
+            }else {
+                inverte = false;
+            }
+        }else {
+            inverte = false;
+            temp = 0;
+        }
+    }
+    inverte = false;
+    if(inverte == true)
+    {
+        tempoTroca = (float) (clock() - clockTroca)/CLOCKS_PER_SEC;
+        if(tempoTroca > 3)
+            tempoTroca = 0;
+    }
+
+    float time = (robotPos.x+5 - ball.pos.x)/ball.vel.x;
+    float positionY = ball.pos.y + time*ball.vel.y;
+
+    if(positionY < 0)
+    {
+        positionY = 0;
+    }
+    if(positionY > 130)
+    {
+        positionY = 130;
+    }
+
+    if (ball.vel.x < -20 && ball.pos.x > centroidDef.x + defenderline2)
+    {
+        vPrev = fabs(0.01 * (positionY - robotPos.y) / time);
+
+        if (vPrev > vMaxPrevision)
+        {
+            vPrev = vMaxPrevision;
+        }
+        else if (vPrev < 0.4)
+        {
+            vPrev = 0.4;
+        }
+        vDeltaPrev = vPrev * 1;
+
+        if(robotPos.x < centroidDef.x + defenderline2 + 5 && robotPos.x > centroidDef.x + defenderline2 - 5)
+        {
+            prevGoal = Point2f(robotPos.x, positionY);
         }
         else
         {
-            alpha = angleTwoPoints(robotPos,ball.pos) - robotAngle;
-            alpha = ajustaAngulo(alpha);
-            if (fabs(alpha) <= limiarTheta)
+            prevGoal = Point2f(centroidDef.x + defenderline2, positionY);
+        }
+
+        theta = angleTwoPoints(robotPos, prevGoal);
+        alpha = theta - robotAngle;
+        alpha = ajustaAngulo(alpha);
+        if (fabs(alpha) <= limiarTheta)
+        {
+            v = -vDeltaPrev * fabs(alpha) / limiarTheta + vPrev;
+            w = kp * alpha / 180 + kd * (alpha - lastAlpha);
+            limiarTheta = 90 - deltaLimiar;
+        }
+        else
+        {
+            alpha = ajustaAngulo(alpha + 180);
+            v = vDeltaPrev * fabs(alpha) / limiarTheta - vPrev;
+            w = kp * alpha / 180 + kd * (alpha - lastAlpha);
+            limiarTheta = 90 + deltaLimiar;
+        }
+
+        if ((fabs(robotPos.x - prevGoal.x) < 2) && (fabs(robotPos.y - prevGoal.y) < 2))
+        {
+            v = 0;
+            if (fabs(robotAngle) > 85 && fabs(robotAngle) < 95)
             {
-                w = kp * alpha / 180;
+                w = 0;
             }
             else
             {
-                alpha = ajustaAngulo(alpha + 180);
-                w = kp * alpha / 180;
+                alpha = 90 - robotAngle;
+                alpha = ajustaAngulo(alpha);
+                if (fabs(alpha) <= limiarTheta)
+                {
+                    w = kp * alpha / 180;
+                }
+                else
+                {
+                    alpha = ajustaAngulo(alpha + 180);
+                    w = kp * alpha / 180;
+                }
             }
         }
+
     }
 
+    else if (ball.pos.x > centroidDef.x + defenderline2 && robotPos.x < centroidDef.x + defenderline2 + 7 && robotPos.x > centroidDef.x + defenderline2 - 7)
+    {
+        alpha = 90 - robotAngle;
+        alpha = ajustaAngulo(alpha);
+        if (fabs(alpha) <= limiarTheta)
+        {
+            w = kp*alpha/180 + kd*(alpha - lastAlpha);
+            limiarTheta = 90 - deltaLimiar;
+        }
+        else
+        {
+            alpha = ajustaAngulo(alpha+180);
+            w = kp*alpha/180 + kd*(alpha - lastAlpha);
+            limiarTheta = 90 + deltaLimiar;
+        }
+
+        if(fabs(robotPos.y-ball.pos.y) < 3)
+        {
+            v = 0;
+        }
+        else if (robotAngle > 0 && ball.pos.y < robotPos.y)
+        {
+            v = -vFollow;
+        }
+        else if (robotAngle > 0 && ball.pos.y > robotPos.y)
+        {
+            v = vFollow;
+        }
+        else if (robotAngle < 0 && ball.pos.y < robotPos.y)
+        {
+            v = vFollow;
+        }
+        else if (robotAngle < 0 && ball.pos.y > robotPos.y)
+        {
+            v = -vFollow;
+        }
+    }
     else
     {
         if (euclidean_dist(robotPos, robotFunctions[indexRobot]->getGoal()) < 10)
@@ -786,6 +899,58 @@ void Mover::defendershield()
         }
     }
 
+    if (airball)
+    {
+        if( (fabs(robotPos.x - robotFunctions[indexRobot]->getGoal().x) < 4) && (fabs(robotPos.y - robotFunctions[indexRobot]->getGoal().y) < 4) )
+        {
+            v = 0;
+
+            if(ball.pos.y > centroidDef.y)
+            {
+                if( robotAngle <=50 && robotAngle >= 40)
+                {
+                    w = 0;
+                }
+                else
+                {
+                    alpha = 45 - robotAngle;
+                    alpha = ajustaAngulo(alpha);
+                    if (fabs(alpha) <= limiarTheta)
+                    {
+                        w = kp*alpha/180;
+                    }
+                    else
+                    {
+                        alpha = ajustaAngulo(alpha+180);
+                        w = kp*alpha/180;
+                    }
+                }
+            }
+            else
+            {
+                if( robotAngle >= -50 && robotAngle <= -40)
+                {
+                    w = 0;
+                }
+                else
+                {
+                    alpha = -45 - robotAngle;
+                    alpha = ajustaAngulo(alpha);
+                    if (fabs(alpha) <= limiarTheta)
+                    {
+                        w = kp*alpha/180;
+                    }
+                    else
+                    {
+                        alpha = ajustaAngulo(alpha+180);
+                        w = kp*alpha/180;
+                    }
+                }
+
+            }
+        }
+    }
+
     if(w > 60)
         w = 60;
     if(w < -60)
@@ -794,8 +959,194 @@ void Mover::defendershield()
     lVel = (v - w*l)*100;
     rVel = (v + w*l)*100;
 
-    cout<< "lvel: " <<lVel<<endl;
-    cout<< "rvel: " <<rVel<<endl;
+//    cout<< "lvel: " <<lVel<<endl;
+//    cout<< "rvel: " <<rVel<<endl;
+
+    lastAlpha = alpha;
+    alphaS = alpha;
+
+    if(euclidean_dist(ball.pos,robotPos) < distGiroGol)
+    {
+        if(robotPos.x < ball.pos.x)
+        {
+            if(robotPos.y > ball.pos.y)
+            {
+                lVel = -velGiroGol*100;
+                rVel = velGiroGol*100;
+            }
+            else if(robotPos.y < ball.pos.y)
+            {
+                lVel = velGiroGol*100;
+                rVel = -velGiroGol*100;
+            }
+        }
+        else
+        {
+            if(ball.pos.y > centroidDef.y + 40)
+            {
+                lVel = velGiroGol*100;
+                rVel = -velGiroGol*100;
+            }
+            else if(ball.pos.y < centroidDef.y - 40)
+            {
+                lVel = -velGiroGol*100;
+                rVel = velGiroGol*100;
+            }
+        }
+    }
+}
+
+void Mover::defendershield()
+{
+
+    float vMaxD = 0.65;
+    float vFollow = 0.50;
+    float vMaxPrevision = 0.85;
+    float vDelta = 1*vMaxD;
+    float limiarTheta = 90;
+    float deltaLimiar = 30;
+    float vDeltaPrev;
+    float vPrev = 0.4;
+    float distGiroGol = 7;
+    float velGiroGol = 1.0;
+
+    Point2f robotPos = teamRobot[indexRobot].getDataState().pos;
+    float robotAngle = teamRobot[indexRobot].getDataState().angle;
+    float v,w,theta;
+
+    prevGoal = GameFunctions().getGoal();
+    //cout<<" M Meta x = "<<prevGoal.x<<" Meta y = "<< prevGoal.y<<endl;
+
+    theta = angleTwoPoints(robotPos, prevGoal);
+    alpha = theta - robotAngle;
+    alpha = ajustaAngulo(alpha);
+    if (fabs(alpha) <= limiarTheta)
+    {
+        v = -vDelta * fabs(alpha) / limiarTheta + vPrev;
+        w = kp * alpha / 180 + kd * (alpha - lastAlpha);
+        limiarTheta = 90 - deltaLimiar;
+    }
+    else
+    {
+        alpha = ajustaAngulo(alpha + 180);
+        v = vDelta * fabs(alpha) / limiarTheta - vPrev;
+        w = kp * alpha / 180 + kd * (alpha - lastAlpha);
+        limiarTheta = 90 + deltaLimiar;
+    }
+
+    if ((fabs(robotPos.x - robotFunctions[indexRobot]->getGoal().x) < 2) && (fabs(robotPos.y - robotFunctions[indexRobot]->getGoal().y) < 2))
+    {
+        v = 0;
+        if (fabs(robotAngle) > (angleTwoPoints(robotPos,ball.pos) + 85) && fabs(robotAngle) < (angleTwoPoints(robotPos,ball.pos) + 95))
+        {
+            w = 0;
+        }
+        else
+        {
+            alpha = angleTwoPoints(robotPos,ball.pos) - robotAngle;
+            alpha = ajustaAngulo(alpha);
+            if (fabs(alpha) <= limiarTheta)
+            {
+                w = kp * alpha / 180;
+            }
+            else
+            {
+                alpha = ajustaAngulo(alpha + 180);
+                w = kp * alpha / 180;
+            }
+        }
+    }
+
+    else
+    {
+        if (euclidean_dist(robotPos, robotFunctions[indexRobot]->getGoal()) < 10)
+        {
+            vMaxD = 0.4;
+        }
+        else
+        {
+            vMaxD = vMaxD;
+        }
+        vDelta = vMaxD*1;
+        theta = robotFunctions[indexRobot]->getDirection();
+
+        if(inverte == true)
+        {
+            if(robotAngle > theta - 90 && robotAngle < theta + 90)
+                sentido = false; //tras
+            else {
+                sentido = true; //frente
+            }
+        }
+        alpha = theta - robotAngle;
+        alpha = ajustaAngulo(alpha);
+
+        if(inverte == false)
+        {
+            if (fabs(alpha) <= limiarTheta)
+            {
+                v = -vDelta * fabs(alpha) / limiarTheta + vMaxD;
+                w = kp * alpha / 180 + kd * (alpha - lastAlpha);
+                limiarTheta = 90 - deltaLimiar;
+            }
+            else
+            {
+                alpha = ajustaAngulo(alpha + 180);
+                v = vDelta * fabs(alpha) / limiarTheta - vMaxD;
+                w = kp * alpha / 180 + kd * (alpha - lastAlpha);
+                limiarTheta = 90 + deltaLimiar;
+            }
+        }
+        else
+        {
+            if(sentido == false)
+            {
+                alpha = ajustaAngulo(alpha + 180);
+                v = vDelta * fabs(alpha) / limiarTheta - vMaxD;
+                w = kp * alpha / 180 + kd * (alpha - lastAlpha);
+                limiarTheta = 90 + deltaLimiar;
+            }else if(sentido == true)
+            {
+                v = -vDelta * fabs(alpha) / limiarTheta + vMaxD;
+                w = kp * alpha / 180 + kd * (alpha - lastAlpha);
+                limiarTheta = 90 - deltaLimiar;
+            }
+        }
+
+//        if((fabs(robotPos.x - robotFunctions[indexRobot]->getGoal().x) < 4) && (fabs(robotPos.y - robotFunctions[indexRobot]->getGoal().y) < 4) )
+//        {
+//            v = 0;
+//            if(fabs(robotAngle) > 85 && fabs(robotAngle) < 95)
+//            {
+//                w = 0;
+//            }
+//            else
+//            {
+//                alpha = 90 - robotAngle;
+//                alpha = ajustaAngulo(alpha);
+//                if (fabs(alpha) <= limiarTheta)
+//                {
+//                    w = kp*alpha/180;
+//                }
+//                else
+//                {
+//                    alpha = ajustaAngulo(alpha+180);
+//                    w = kp*alpha/180;
+//                }
+//            }
+//        }
+    }
+
+    if(w > 60)
+        w = 60;
+    if(w < -60)
+        w = -60;
+
+    lVel = (v - w*l)*100;
+    rVel = (v + w*l)*100;
+
+//    cout<< "lvel: " <<lVel<<endl;
+//    cout<< "rvel: " <<rVel<<endl;
 
     lastAlpha = alpha;
     alphaS = alpha;
