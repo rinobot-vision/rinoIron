@@ -92,6 +92,7 @@ int main(int argc, char *argv[]) {
         }
         if(ourColor == VSSRef::Color::YELLOW){
             robots_n =  detection.robots_yellow_size();
+                        cout<<robots_n<<endl;
         }
         if(ourColor == VSSRef::Color::BLUE){
             bola.pos.x = (length+ball.x())*100;
@@ -137,9 +138,8 @@ int main(int argc, char *argv[]) {
 
         Vision->setBall(bola);
         Vision->setRobots(rinobot); //___
-
+        if(robots_n != 0)
         GameWindow.updateInfo(Vision->getRobots(),Vision->getEnemy(),Vision->getCentroidDef(), Vision->getCentroidAtk(), Vision->getBall(), Knn);
-
 
         // Sending robot commands for robot 0, 1 and 2
         Point2f Velocidades[3];

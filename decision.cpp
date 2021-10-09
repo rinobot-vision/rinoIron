@@ -68,9 +68,9 @@ void Decision::updateObjectives()
     int robotFunc[3];
     if(strategy == FIXED3)
     {
-        teamRobot[2].setFunction(GOALKEEPER);
+        teamRobot[2].setFunction(STRIKER);
         teamRobot[1].setFunction(DEFENDER);
-        teamRobot[0].setFunction(STRIKER);
+        teamRobot[0].setFunction(GOALKEEPER);
     }
 
     else if(strategy == FIXED2_0)

@@ -521,7 +521,7 @@ void GameFunctions::striker()
 
     if (tempoRepulsive == 0)
     {
-        cout << "entrou aqui?" << endl;
+        //cout << "entrou aqui?" << endl;
         ClockStartR = clock();
         tempoStopRepulsive = 0;
         flagGrab = false;

@@ -40,7 +40,6 @@ void gamewindow::updateInfo(vector<robot> robots, vector<robot> enemy, Point2f d
     vector<robot> teste;
     teste = deecision.getTeamRobots();
     updateRunFunctions(teste,deecision.getCentroidDef(),deecision.getCentroidAtk(),deecision.getBall());
-
 }
 void gamewindow::updateRunFunctions(vector<robot> robots, Point2f def, Point2f atk, dataState b)
 {
@@ -53,6 +52,7 @@ void gamewindow::updateRunFunctions(vector<robot> robots, Point2f def, Point2f a
     FOR_EACH_MOVER(setBall(b));
 
     FOR_EACH_ROBOT_FUNCTIONS(start());
+
     FOR_EACH_ROBOT_FUNCTIONS(wait());
 
     mover[0]->setGameFunctions(robotFunctions[0],robotFunctions[1],robotFunctions[2]);
@@ -61,7 +61,7 @@ void gamewindow::updateRunFunctions(vector<robot> robots, Point2f def, Point2f a
 
     FOR_EACH_MOVER(start());
     FOR_EACH_MOVER(wait());
-
+    cout<<"chegou aqui 6"<<endl;
 }
 
 void gamewindow::EnviaVelocidades(Point2f Velocidades[3]){

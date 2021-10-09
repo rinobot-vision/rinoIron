@@ -105,6 +105,7 @@ double euclidean_dist(Point2f p, Point2f q)
 
 double ajustaAngulo(double angle)
 {
+
     while (angle < -180)
         angle = angle + 360;
     while (angle > 180)

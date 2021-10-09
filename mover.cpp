@@ -619,8 +619,8 @@ void Mover::defender()
     lVel = (v - w*l)*100;
     rVel = (v + w*l)*100;
 
-    cout<< "lvel: " <<lVel<<endl;
-    cout<< "rvel: " <<rVel<<endl;
+//    cout<< "lvel: " <<lVel<<endl;
+//    cout<< "rvel: " <<rVel<<endl;
 
     lastAlpha = alpha;
     alphaS = alpha;
@@ -662,6 +662,7 @@ void Mover::striker()
 
     Point2f robotPos = teamRobot[indexRobot].getDataState().pos;
     float robotAngle = teamRobot[indexRobot].getDataState().angle;
+    cout<<"robotAngle = "<<robotAngle<<endl;
     float vMax = this->vMax*0.01;
     float dist = euclidean_dist(robotPos,ball.pos);
 
