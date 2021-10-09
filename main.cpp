@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 
 
     // Setting our color as BLUE at left side
-    VSSRef::Color ourColor = VSSRef::Color::YELLOW;
+    VSSRef::Color ourColor = VSSRef::Color::BLUE;
     bool ourSideIsLeft;
 
     if(ourColor == VSSRef::Color::BLUE){
@@ -213,6 +213,7 @@ int main(int argc, char *argv[]) {
                 replacerClient->sendFrame();
            }
         }
+
         
         if(refereeClient->getLastFoul() == VSSRef::Foul::GOAL_KICK){
             if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){

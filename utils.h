@@ -32,7 +32,7 @@
 #define PI 3.141592
 #define NUMROBOTS 3
 #define FPS 100
-#define STRATEGY 1
+#define STRATEGY 4
 
 //  Para escolher qual strategy utilizar altere os valores acima de acordo com a tabela a seguir
 //  0 = FIXED
