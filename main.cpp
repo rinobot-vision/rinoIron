@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 
 
     // Setting our color as BLUE at left side
-    VSSRef::Color ourColor = VSSRef::Color::YELLOW;
+    VSSRef::Color ourColor = VSSRef::Color::BLUE;
     bool ourSideIsLeft;
 
     if(ourColor == VSSRef::Color::BLUE){
@@ -262,9 +262,9 @@ int main(int argc, char *argv[]) {
                     replacerClient->sendFrame();
                 }
                 if(refereeClient->getLastFoulColor() == VSSRef::Color::YELLOW){
-                    replacerClient->placeRobot(2, ourSideIsLeft ?  0.2 : 0.45, 0.2,0);
+                    replacerClient->placeRobot(2, ourSideIsLeft ?  0.25 : 0.45, ourSideIsLeft ? 0.35 : 0.2,0);
                     replacerClient->placeRobot(0, ourSideIsLeft ?  -0.38 : 0.68 , ourSideIsLeft ? 0: (ball.y() > 0 ? 0.35 : -0.35) , 0);
-                    replacerClient->placeRobot(1, ourSideIsLeft ?  -0.71 : 0.55 , 0, 0);
+                    replacerClient->placeRobot(1, ourSideIsLeft ?  0.25 : 0.55 ,ourSideIsLeft ? -0.35 : 0, 0);
                     replacerClient->sendFrame();
                 }
             }
