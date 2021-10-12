@@ -535,12 +535,12 @@ void GameFunctions::striker()
         //        cout << "robot (" << robot.pos.x << ","  << robot.pos.y << ")" << endl;
         if (euclidean_dist(StrikeRepulsive, robot.pos) <= 5 || flagGrab == true)
         {
-            cout << "REPULSIVE" << endl;
+            //cout << "REPULSIVE" << endl;
             k_larg = 0.01;
             thePhi = ajustaAngulo(thePhi + 90);
-            cout << "thePHI: " << thePhi << endl;
+            //cout << "thePHI: " << thePhi << endl;
             if(flagGrab == false){
-                cout << "iniciou stop clock" << endl;
+                //cout << "iniciou stop clock" << endl;
                 ClockStopR = clock();
             }
             flagGrab = true;
@@ -556,7 +556,7 @@ void GameFunctions::striker()
     //    cout << tempoStopRepulsive << endl;
     if (tempoStopRepulsive >= 0.5)
     {
-        cout << "REINICIA REPULSIVE" << endl;
+        //cout << "REINICIA REPULSIVE" << endl;
         tempoRepulsive = 0;
         tempoStopRepulsive = 0;
 
@@ -599,6 +599,9 @@ void GameFunctions::defender()
             gSize = gSizeW;
             de = deW;
             Kr = KrW;
+            if(ball.pos.x > robot.pos.x && ball.pos.y > 20){
+                thetaDir = 0;
+            }
             thetaDir = 55.0;
         }
         else if(ball.pos.y > 100)
@@ -608,6 +611,9 @@ void GameFunctions::defender()
             gSize = gSizeW;
             de = deW;
             Kr = KrW;
+            if(ball.pos.x > robot.pos.x && ball.pos.y < 110){
+                thetaDir = 0;
+            }
             thetaDir = -55.0;
         }
 
@@ -694,23 +700,23 @@ void GameFunctions::goalkeeper()
     {
         if(previsionYball < centroidDef.y - 20)
         {
-            goal.x = centroidDef.x + 7;
+            goal.x = centroidDef.x + 4;
             goal.y = centroidDef.y - 15;
         }
         else if(previsionYball> centroidDef.y + 20)
         {
-            goal.x = centroidDef.x + 7;
+            goal.x = centroidDef.x + 4;
             goal.y = centroidDef.y + 15;
         }
         else
         {
-            goal.x = centroidDef.x + 7;
+            goal.x = centroidDef.x + 4;
             goal.y = ball.pos.y;
         }
     }
     else
     {
-        goal.x = centroidDef.x + 7;
+        goal.x = centroidDef.x + 4;
         goal.y = centroidDef.y;
     }
 

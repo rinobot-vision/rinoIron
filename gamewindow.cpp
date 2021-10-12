@@ -61,7 +61,11 @@ void gamewindow::updateRunFunctions(vector<robot> robots, Point2f def, Point2f a
 
     FOR_EACH_MOVER(start());
     FOR_EACH_MOVER(wait());
-    cout<<"chegou aqui 6"<<endl;
+}
+
+int gamewindow::get_strategy()
+{
+    return STRATEGY;
 }
 
 void gamewindow::EnviaVelocidades(Point2f Velocidades[3]){

@@ -101,7 +101,7 @@ private:
     bool flagGrab = false;
     bool flagGrabM = false;
 
-    float defenderLine = 38;
+    float defenderLine = 36;
     float volanteLine = 38;
     float lastX = defenderLine;
     float offLine = 115;

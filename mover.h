@@ -24,6 +24,7 @@ public:
     void fuzzy();
     void impostor();
     void libero();
+    void Control();
     void newstriker();
     void offdefender();
     void setGameFunctions(GameFunctions *, GameFunctions *, GameFunctions *);
@@ -86,7 +87,7 @@ private:
     float lastVel;
     float alphaS;
     float offLine = 115;
-    float distGiro = 9;
+    float distGiro = 7;
     float distGiroGoleiro = 8;
     float velGiroLado = 0.8;
     float velGiroAtk = 0.5;
@@ -94,6 +95,7 @@ private:
     float velGiroPenalty = 2;
     float lVel;
     float rVel;
+    float intAlpha = 0;
 
     int indexRobot;
     int robotObstCont = 0;

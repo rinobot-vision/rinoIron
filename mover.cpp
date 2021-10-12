@@ -27,6 +27,7 @@ void Mover::run()
             break;
         case STRIKER:
             striker();
+            //Control();
             break;
         case FAKE9:
             fake9();
@@ -213,6 +214,7 @@ void Mover::goalkeeper()
     {
         if ((ball.pos.x < centroidDef.x + 70) && (ball.pos.y > centroidDef.y - 25) && (ball.pos.y < centroidDef.y + 25) && (robotPos.x < centroidDef.x+5) && (robotPos.x >= centroidDef.x -5))
         {
+            //cout<<"follow"<<endl;
             theta = robotFunctions[indexRobot]->getDirection();
             alpha = theta - robotAngle;
             alpha = ajustaAngulo(alpha);
@@ -269,15 +271,18 @@ void Mover::goalkeeper()
                 limiarTheta = 90 + deltaLimiar;
             }
 
-            if ((fabs(robotPos.x - robotFunctions[indexRobot] ->getGoal().x <2.5)) && (((robotFunctions[indexRobot]->getGoal().y - robotPos.y<1) && (ball.pos.y>65)) || ((robotPos.y - robotFunctions[indexRobot]->getGoal().y <1) && (ball.pos.y<65))))
+            if ((fabs(robotPos.x - robotFunctions[indexRobot] ->getGoal().x <4)) && (((robotFunctions[indexRobot]->getGoal().y - robotPos.y<1) && (ball.pos.y>65)) || ((robotPos.y - robotFunctions[indexRobot]->getGoal().y <1) && (ball.pos.y<65))))
             {
                 v = 0;
+                //cout<<"pato"<<endl;
                 if(fabs(robotAngle) > 85 && fabs(robotAngle) < 95)
                 {
+                    //cout<<"Ta aqui"<<endl;
                     w = 0;
                 }
                 else
                 {
+                    //cout<<"Ajustando"<<endl;
                     alpha = 90 - robotAngle;
                     alpha = ajustaAngulo(alpha);
                     if (fabs(alpha) <= limiarTheta)
@@ -319,7 +324,7 @@ void Mover::defender()
     float limiarTheta = 90;
     float deltaLimiar = 30;
     float vPrev, vDeltaPrev;
-    float distGiroGol = 8;
+    float distGiroGol = 7;
     float velGiroGol = 1.0;
 
     airball = false;
@@ -657,12 +662,75 @@ void Mover::defender()
 
 }
 
+void Mover::Control()
+{
+
+    float kpc = 10;
+    float kdc = 2;
+    float kic = 3;
+    dataState robot = teamRobot[indexRobot].getDataState();
+    float angleRobot = robot.angle;
+    float vMax = 50*0.01;
+    float v,w;
+    float wMax = 0.8*vMax/l; //dessa forma o robo jamais ira rodar com as duas rodas em sentidos opostos, evitando derrapagem bruscas.
+    float intAlphaMax = 200;
+
+
+    float theta = robotFunctions[indexRobot]->getDirection();
+    alpha = theta - angleRobot;
+    alpha = ajustaAngulo(alpha);
+
+    v = 1;
+    if (fabs(alpha) > 90){
+        angleRobot = ajustaAngulo(angleRobot + 180);
+        alpha = ajustaAngulo(theta - angleRobot);
+        v = -1;
+    }
+
+    v = ((-0*vMax * fabs(alpha) / 90) + vMax)*v;
+
+    intAlpha = intAlpha + alpha;
+    intAlpha = fmin(intAlphaMax,fmax(intAlpha, -intAlphaMax));
+
+    w = (kpc/100 * alpha) + (kic/100000 * intAlpha) + (kdc * (alpha - lastAlpha));
+    w = fmin(wMax, fmax(w , -wMax));
+
+    lVel = (v - w*l)*100;
+    rVel = (v + w*l)*100;
+
+    lastAlpha = alpha;
+
+    rotate();
+
+
+    if(robotFunctions[indexRobot]->getAtkSituation() == true)
+    {
+            if(euclidean_dist(ball.pos,robot.pos) < 10)
+            {
+                if(firstAceleration == true)
+                {
+                    clockAceleration = clock();
+                }
+                firstAceleration = false;
+                atkSituation();
+            }
+            else
+            {
+                firstAceleration = true;
+            }
+    }
+    else
+    {
+        firstAceleration = true;
+    }
+
+}
+
 void Mover::striker()
 {
 
     Point2f robotPos = teamRobot[indexRobot].getDataState().pos;
     float robotAngle = teamRobot[indexRobot].getDataState().angle;
-    cout<<"robotAngle = "<<robotAngle<<endl;
     float vMax = this->vMax*0.01;
     float dist = euclidean_dist(robotPos,ball.pos);
 

@@ -18,6 +18,7 @@ public:
     void updateRunFunctions(vector<robot>, Point2f, Point2f, dataState);
     GameFunctions *robotFunctions[3];
     Mover *mover[3];
+    int get_strategy();
 
     void EnviaVelocidades(Point2f Velocidades[3]);
 private:
