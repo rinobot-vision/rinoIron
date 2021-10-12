@@ -116,6 +116,8 @@ void Mover::goalkeeper()
     float limiarTheta = 90;
     float deltaLimiar = 30;
     float vMaxGol = 0.7;
+    kd = 0;
+    kp = 10;
 
     float vDeltaGol = vMaxGol;
     float vPrev, vDeltaPrev;
@@ -125,7 +127,7 @@ void Mover::goalkeeper()
     Point2f robotPos = teamRobot[indexRobot].getDataState().pos;
     float robotAngle = teamRobot[indexRobot].getDataState().angle;
     float time;
-    if(ball.vel.x < -30 )
+    if(ball.vel.x < -5 )
     {
         time = (robotPos.x+5 - ball.pos.x)/ball.vel.x;
     }
@@ -2104,7 +2106,7 @@ void Mover::rotate_def (){
         distGiro=8;
     }
     else if (teamRobot[indexRobot].getFunction()==DEFENDER){
-        distGiro=10;
+        distGiro=8;
     }
 
     if((robotPos.y > ball.pos.y) && (euclidean_dist(ball.pos,robotPos) < distGiro))

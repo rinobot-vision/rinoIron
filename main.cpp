@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 
 
     // Setting our color as BLUE at left side
-    VSSRef::Color ourColor = VSSRef::Color::BLUE;
+    VSSRef::Color ourColor = VSSRef::Color::YELLOW;
     bool ourSideIsLeft;
 
     if(ourColor == VSSRef::Color::BLUE){
