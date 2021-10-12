@@ -161,13 +161,13 @@ void Mover::goalkeeper()
         //vPrev = vMax;
         vDeltaPrev = vPrev * 1;
 
-        if(robotPos.x < centroidDef.x + 7 && robotPos.x > centroidDef.x - 5)
+        if(robotPos.x < centroidDef.x + 4 && robotPos.x > centroidDef.x - 5)
         {
             prevGoal = Point2f(robotPos.x, positionY);
         }
         else
         {
-            prevGoal = Point2f(centroidDef.x + 7, positionY);
+            prevGoal = Point2f(centroidDef.x + 4, positionY);
         }
 
         theta = angleTwoPoints(robotPos, prevGoal);
