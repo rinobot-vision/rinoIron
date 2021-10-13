@@ -197,8 +197,6 @@ bool GameFunctions::getAgainsTheTeam()
 
 void GameFunctions::striker()
 {
-    // Quando a bola estiver no ataque e o atacante estiver atrás do defender, ele desvia dele.
-
     flagGoAhead = false;
     setStopOnGoal(false);
     airball=false;

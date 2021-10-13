@@ -115,7 +115,7 @@ void Mover::goalkeeper()
     float vMaxPrevision = 1.2;
     float limiarTheta = 90;
     float deltaLimiar = 30;
-    float vMaxGol = 0.7;
+    float vMaxGol = 0.85;
     kd = 0;
     kp = 10;
 
@@ -192,7 +192,7 @@ void Mover::goalkeeper()
         if ((fabs(robotPos.x - prevGoal.x) < 5) && (fabs(robotPos.y - prevGoal.y) < 4))
         {
             v = 0;
-            if (fabs(robotAngle) > 80 && fabs(robotAngle) < 100)
+            if (fabs(robotAngle) > 75 && fabs(robotAngle) < 105)
             {
                 w = 0;
             }
@@ -220,17 +220,22 @@ void Mover::goalkeeper()
             theta = robotFunctions[indexRobot]->getDirection();
             alpha = theta - robotAngle;
             alpha = ajustaAngulo(alpha);
-            if (fabs(alpha) <= limiarTheta)
+            if(fabs(alpha) > 5)
             {
-                w = kp*alpha/180 + kd*(alpha - lastAlpha);
-                limiarTheta = 90 - deltaLimiar;
+                if (fabs(alpha) <= limiarTheta)
+                {
+                    w = kp*alpha/180 + kd*(alpha - lastAlpha);
+                    limiarTheta = 90 - deltaLimiar;
+                }
+                else
+                {
+                    alpha = ajustaAngulo(alpha+180);
+                    w = kp*alpha/180 + kd*(alpha - lastAlpha);
+                    limiarTheta = 90 + deltaLimiar;
+                }
             }
             else
-            {
-                alpha = ajustaAngulo(alpha+180);
-                w = kp*alpha/180 + kd*(alpha - lastAlpha);
-                limiarTheta = 90 + deltaLimiar;
-            }
+                w = 0;
 
             if(fabs(robotPos.y-ball.pos.y) < 3)
             {
@@ -277,7 +282,7 @@ void Mover::goalkeeper()
             {
                 v = 0;
                 //cout<<"pato"<<endl;
-                if(fabs(robotAngle) > 85 && fabs(robotAngle) < 95)
+                if(fabs(robotAngle) > 75 && fabs(robotAngle) < 105)
                 {
                     //cout<<"Ta aqui"<<endl;
                     w = 0;
@@ -287,7 +292,7 @@ void Mover::goalkeeper()
                     //cout<<"Ajustando"<<endl;
                     alpha = 90 - robotAngle;
                     alpha = ajustaAngulo(alpha);
-                    if (fabs(alpha) <= limiarTheta)
+                    if (fabs(alpha) < limiarTheta)
                     {
                         w = kp*alpha/180;
                     }
@@ -626,8 +631,8 @@ void Mover::defender()
     lVel = (v - w*l)*100;
     rVel = (v + w*l)*100;
 
-//    cout<< "lvel: " <<lVel<<endl;
-//    cout<< "rvel: " <<rVel<<endl;
+    //    cout<< "lvel: " <<lVel<<endl;
+    //    cout<< "rvel: " <<rVel<<endl;
 
     lastAlpha = alpha;
     alphaS = alpha;
@@ -707,19 +712,19 @@ void Mover::Control()
 
     if(robotFunctions[indexRobot]->getAtkSituation() == true)
     {
-            if(euclidean_dist(ball.pos,robot.pos) < 10)
+        if(euclidean_dist(ball.pos,robot.pos) < 10)
+        {
+            if(firstAceleration == true)
             {
-                if(firstAceleration == true)
-                {
-                    clockAceleration = clock();
-                }
-                firstAceleration = false;
-                atkSituation();
+                clockAceleration = clock();
             }
-            else
-            {
-                firstAceleration = true;
-            }
+            firstAceleration = false;
+            atkSituation();
+        }
+        else
+        {
+            firstAceleration = true;
+        }
     }
     else
     {
