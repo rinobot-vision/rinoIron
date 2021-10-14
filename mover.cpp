@@ -312,7 +312,7 @@ void Mover::defender()
     float limiarTheta = 90;
     float deltaLimiar = 30;
     float vPrev, vDeltaPrev;
-    float distGiroGol = 10;
+    float distGiroGol = 7;
     float velGiroGol = 1.0;
 
     airball = false;
