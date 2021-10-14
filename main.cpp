@@ -149,34 +149,20 @@ int main(int argc, char *argv[]) {
         //            actuatorClient->sendCommand(i, Velocidades[i].x, Velocidades[i].y);
         //        }
 
-        if(GameWindow.get_strategy() == 0 || GameWindow.get_strategy() == 4) // FIXED
+        if(GameWindow.get_strategy() == 0) // FIXED
         {
-            if(refereeClient->getLastFoul() == VSSRef::Foul::KICKOFF){
-                if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){
-                    replacerClient->placeRobot(2, ourSideIsLeft ? -0.06 : 0.24, 0, ourSideIsLeft ? 15 : 0);
-                    replacerClient->placeRobot(1, ourSideIsLeft ? -0.38 : 0.38, 0, 90);
-                    replacerClient->placeRobot(0, ourSideIsLeft ? -0.72 : 0.75, 0, 90);
-                    replacerClient->sendFrame();
-                }
-                else if(refereeClient->getLastFoulColor() == VSSRef::Color::YELLOW){
-                    replacerClient->placeRobot(2, ourSideIsLeft ? -0.24 : 0.6, 0, ourSideIsLeft ? 0 : -15);
-                    replacerClient->placeRobot(1, ourSideIsLeft ? -0.38 : 0.38, 0, 90);
-                    replacerClient->placeRobot(0, ourSideIsLeft ? -0.72 : 0.75, 0, 90);
-                    replacerClient->sendFrame();
-                }
-            }
-
             if(refereeClient->getLastFoul() == VSSRef::Foul::PENALTY_KICK){
                 if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){
-                    replacerClient->placeRobot(2, ourSideIsLeft ? 0.3 : -0.1, 0, 25);
-                    replacerClient->placeRobot(0, ourSideIsLeft ? -0.4 : -0.1, -0.2, 0);
-                    replacerClient->placeRobot(1, ourSideIsLeft ? -0.72 : 0.72, 0, 0);
+                    replacerClient->placeRobot(2, ourSideIsLeft ? 0.3 : -0.1, 0, -20);
+                    replacerClient->placeRobot(1, ourSideIsLeft ? -0.4 : -0.1, -0.2, 90);
+                    replacerClient->placeRobot(0, ourSideIsLeft ? -0.72 : 0.72, 0, 90);
                     replacerClient->sendFrame();
                 }
                 if(refereeClient->getLastFoulColor() == VSSRef::Color::YELLOW){
-                    replacerClient->placeRobot(2, ourSideIsLeft ? 0.1 : -0.3, 0, 25);
-                    replacerClient->placeRobot(0, ourSideIsLeft ? 0.1 : 0.4 , -0.1, 0);
-                    replacerClient->placeRobot(1, ourSideIsLeft ? -0.72 : 0.72, 0, 0);
+
+                    replacerClient->placeRobot(2, ourSideIsLeft ? 0.1 : -0.3, 0, 20);
+                    replacerClient->placeRobot(1, ourSideIsLeft ? 0.1 : 0.4 , -0.1, 90);
+                    replacerClient->placeRobot(0, ourSideIsLeft ? -0.72 : 0.72, 0.05, 90);
                     replacerClient->sendFrame();
                 }
             }
@@ -227,31 +213,17 @@ int main(int argc, char *argv[]) {
 
         else if(GameWindow.get_strategy() == 1) // FULL ATK
         {
-            if(refereeClient->getLastFoul() == VSSRef::Foul::KICKOFF){
-                if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){
-                    replacerClient->placeRobot(2, ourSideIsLeft ? -0.06 : 0.24, 0, ourSideIsLeft ? 15 : 0);
-                    replacerClient->placeRobot(0, ourSideIsLeft ? -0.38 : 0.38, 0, 90);
-                    replacerClient->placeRobot(1, ourSideIsLeft ? -0.72 : 0.75, 0, 90);
-                    replacerClient->sendFrame();
-                }
-                else if(refereeClient->getLastFoulColor() == VSSRef::Color::YELLOW){
-                    replacerClient->placeRobot(2, ourSideIsLeft ? -0.24 : 0.6, 0, ourSideIsLeft ? 0 : -15);
-                    replacerClient->placeRobot(0, ourSideIsLeft ? -0.38 : 0.38, 0, 90);
-                    replacerClient->placeRobot(1, ourSideIsLeft ? -0.72 : 0.75, 0, 90);
-                    replacerClient->sendFrame();
-                }
-            }
             if(refereeClient->getLastFoul() == VSSRef::Foul::PENALTY_KICK){
                 if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){
-                    replacerClient->placeRobot(2, ourSideIsLeft ? 0.3 : -0.1, ourSideIsLeft ? 0 : 0.4, -25);
+                    replacerClient->placeRobot(2, ourSideIsLeft ? 0.3 : -0.1, ourSideIsLeft ? 0 : 0.4, -20);
                     replacerClient->placeRobot(0, ourSideIsLeft ? -0.38 : -0.1, 0, 90);
                     replacerClient->placeRobot(1, ourSideIsLeft ? -0.1 : 0.72, ourSideIsLeft ? -0.2: 0, ourSideIsLeft ? 0 : 90);
                     replacerClient->sendFrame();
                 }
                 if(refereeClient->getLastFoulColor() == VSSRef::Color::YELLOW){
-                    replacerClient->placeRobot(2, ourSideIsLeft ? 0.1 : -0.3, ourSideIsLeft ? 0.2 : 0, -25);
-                    replacerClient->placeRobot(1, ourSideIsLeft ? 0.1 : 0.38, 0, 90);
-                    replacerClient->placeRobot(0, ourSideIsLeft ? -0.72 : 0.1, ourSideIsLeft ? 0: -0.2, ourSideIsLeft ? 0 : 0);
+                    replacerClient->placeRobot(2, ourSideIsLeft ? 0.1 : -0.3, ourSideIsLeft ? 0.2 : 0, -20);
+                    replacerClient->placeRobot(0, ourSideIsLeft ? 0.1 : 0.38, 0, 90);
+                    replacerClient->placeRobot(1, ourSideIsLeft ? -0.72 : 0.1, ourSideIsLeft ? 0.05: -0.2, ourSideIsLeft ? 90 : 0);
                     replacerClient->sendFrame();
                 }
             }
@@ -317,6 +289,13 @@ int main(int argc, char *argv[]) {
                 actuatorClient->sendCommand(i, 0, 0);
             }
         }
+        if(refereeClient->getLastFoul() == VSSRef::Foul::KICKOFF){
+            replacerClient->placeRobot(2, ourSideIsLeft ? -0.24 : 0.24, 0, 0);
+            replacerClient->placeRobot(1, ourSideIsLeft ? -0.38 : 0.38, 0, 90);
+            replacerClient->placeRobot(0, ourSideIsLeft ? -0.72 : 0.75, 0, 90);
+            replacerClient->sendFrame();
+        }
+
         
         // Stop timer
         timer.stop();
