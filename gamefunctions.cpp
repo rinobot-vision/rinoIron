@@ -304,7 +304,7 @@ void GameFunctions::striker()
                         thetaDir = angleTwoPoints(ball.pos,maxLimit)*PI/180;
                         atkPoint = maxLimit;
                         //thetaDir = 0;
-                        //atkPoint = centroidAtk;
+                        atkPoint = centroidAtk;
                     }
                     else if(ang_point.y > 80)
 
@@ -312,7 +312,7 @@ void GameFunctions::striker()
                         thetaDir = angleTwoPoints(ball.pos,minLimit)*PI/180;
                         atkPoint = minLimit;
                         //thetaDir = 0;
-                        //atkPoint = centroidAtk;
+                        atkPoint = centroidAtk;
                     }
                     else
                     {
@@ -1066,6 +1066,8 @@ void GameFunctions::volante()
 
 void GameFunctions::libero()
 {
+    flagRepulsiveBall = false;
+    flagRepulsiveStriker = false;
     dataState robot = teamRobot[indexRobot].getDataState();
     int striker;
     for(int i = 0; i < 3; i++)
@@ -1077,7 +1079,7 @@ void GameFunctions::libero()
     Point2f ballPrev= Point2f(ball.pos.x + time*ball.vel.x, ball.pos.y + time*ball.vel.y);
     ballPrev = ball.pos;
     int distbola = 40;
-    if(ball.pos.x > defenderLine + centroidDef.x)
+    if(ball.pos.x > 75)
     {
         goal.y = ballPrev.y;
         if(ball.vel.x >= 0)
@@ -1099,8 +1101,13 @@ void GameFunctions::libero()
         if(euclidean_dist(robot.pos, teamRobot[striker].getDataState().pos) < 15)
         {
             k_larg = 0.04;
-            thePhi = repulsiveMath(robot,teamRobot[striker].getDataState().pos);
+            flagRepulsiveStriker = true;
         }
+    }
+    else if(ball.pos.x <= 75 && ball.pos.x > defenderLine + centroidDef.x)
+    {
+        goal.x = defenderLine;
+        goal.y = ball.pos.y;
     }
     else
     {
@@ -1149,6 +1156,14 @@ void GameFunctions::libero()
             }
         }
     }
+
+    if(ball.pos.x > defenderLine + centroidDef.x && ball.pos.x < robot.pos.x)
+    {
+        goal.y = ball.pos.y;
+        goal.x = defenderLine + centroidDef.x;
+        flagRepulsiveBall = true;
+    }
+
     if(goal.x < (centroidDef.x + 25) &&(goal.y < centroidDef.y + 20 && goal.y > centroidDef.y - 20))
         goal.x = goal.x + 15;
 
@@ -1156,6 +1171,10 @@ void GameFunctions::libero()
     thePhi = angleTwoPoints(robot.pos, goal);
     if(flagKickBall)
         univectorField(robot,Point2f(0,0));
+    if(flagRepulsiveBall)
+        thePhi = repulsiveMath(robot, ball.pos);
+    if (flagRepulsiveStriker)
+        thePhi = repulsiveMath(robot,teamRobot[striker].getDataState().pos);
 }
 
 

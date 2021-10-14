@@ -97,6 +97,8 @@ private:
     bool kickPState = false;
     bool flagGoAhead = false;
     bool flagKickBall = false;
+    bool flagRepulsiveBall = false;
+    bool flagRepulsiveStriker = false;
     bool penaultyPermission = false;
     bool flagGrab = false;
     bool flagGrabM = false;

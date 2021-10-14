@@ -344,6 +344,12 @@ void Mover::defender()
     float robotAngle = teamRobot[indexRobot].getDataState().angle;
     float v,w,theta;
 
+    if(robotPos.x < centroidDef.x + 15 && robotPos.y < 85 && robotPos.y > 45 ){
+        vMaxD = 0.8;
+        vFollow = 0.7;
+        vDelta = vMaxD;
+    }
+
     if(tempoTroca == 0){
 
         if(temp == 0)
