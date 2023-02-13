@@ -15,10 +15,16 @@
 #include "knn.h"
 #include "QThread"
 #include "iostream"
+#include "log.h"
+#include "config.h"
+#include "positions.h"
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
+    Core::Log::Init();
+    Core::Config::Init();
+    Position::Init(CONFIG_VAR("defenderDivisions"));
     QCoreApplication a(argc, argv);
 
     // Starting timer

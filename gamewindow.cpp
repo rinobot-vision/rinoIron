@@ -35,7 +35,7 @@ void gamewindow::updateInfo(vector<robot> robots, vector<robot> enemy, Point2f d
     deecision.setAreas(def,atk);
     deecision.setBall(ball);
     deecision.setKnnInformation(k);
-    deecision.setStrategy(STRATEGY);
+    deecision.setStrategy(CONFIG_VAR("strategy"));
     deecision.updateObjectives();
     vector<robot> teste;
     teste = deecision.getTeamRobots();

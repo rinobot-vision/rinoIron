@@ -6,6 +6,7 @@
 #include <QTimer>
 #include "utils.h"
 #include "knn.h"
+#include "log.h"
 
 
 #define FIXED3 0

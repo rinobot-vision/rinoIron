@@ -5,6 +5,12 @@
 #include "gamefunctions.h"
 #include "knn.h"
 #include "mover.h"
+#include <string>
+#include <limits.h>
+#include <unistd.h>
+#include "config.h"
+
+
 
 class gamewindow
 {
@@ -21,6 +27,7 @@ public:
     int get_strategy();
 
     void EnviaVelocidades(Point2f Velocidades[3]);
+    json config;
 private:
 };
 

@@ -2,8 +2,12 @@
 
 Mover::Mover()
 {
-    kp = 19;
-    kd = 2.5;
+    kp = CONFIG_VAR("kp");
+    kd = CONFIG_VAR("kd");
+    for(robot rob : teamRobot) {
+        rob.setKp(kp);
+        rob.setKd(kd);
+    }
 }
 
 Mover::~Mover()
@@ -116,8 +120,8 @@ void Mover::goalkeeper()
     float limiarTheta = 90;
     float deltaLimiar = 30;
     float vMaxGol = 0.7;
-    kd = 0;
-    kp = 10;
+    kd = CONFIG_VAR("kd");
+    kp = CONFIG_VAR("kp");
 
     float vDeltaGol = vMaxGol;
     float vPrev, vDeltaPrev;
@@ -672,10 +676,9 @@ void Mover::defender()
 
 void Mover::Control()
 {
-
-    float kpc = 10;
-    float kdc = 2;
-    float kic = 3;
+    float kpc = CONFIG_VAR("kp");
+    float kdc = CONFIG_VAR("kd");
+    float kic = CONFIG_VAR("ki");
     dataState robot = teamRobot[indexRobot].getDataState();
     float angleRobot = robot.angle;
     float vMax = 50*0.01;
@@ -920,7 +923,7 @@ void Mover::striker()
 
     lVel = (v - w*l)*100;
     rVel = (v + w*l)*100;
-
+    //rVel = lVel = 0;
     //  cout << "alpha: " << alpha << endl;
     //    cout << "derivada: " << alpha - lastAlpha << endl;
     //  cout << "v: " << v << endl;

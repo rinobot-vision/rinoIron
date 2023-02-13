@@ -32,7 +32,7 @@
 #define PI 3.141592
 #define NUMROBOTS 3
 #define FPS 100
-#define STRATEGY 4
+#define STRATEGY 0
 
 //  Para escolher qual strategy utilizar altere os valores acima de acordo com a tabela a seguir
 //  0 = FIXED
@@ -53,6 +53,10 @@ struct Point2f{
         x = 0;
         y = 0;
     }
+
+    // std::ostream &operator<<(std::ostream &os, const Point2f &data) {
+    //     return os << "x: " << data.x << " y: " << data.y << std::endl;
+    // }
 };
 
 

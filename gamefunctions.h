@@ -4,6 +4,8 @@
 
 #include "navigation.h"
 #include "robot.h"
+#include "log.h"
+#include "positions.h"
 
 class GameFunctions: public Navigation
 {

@@ -49,7 +49,10 @@ SOURCES += \
         robot.cpp \
         utils.cpp \
         utils/timer/timer.cpp \
-        vision.cpp
+        vision.cpp \
+        log.cpp \
+        config.cpp \
+        positions.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -78,6 +81,9 @@ HEADERS += \
     robot.h \
     utils.h \
     utils/timer/timer.h \
-    vision.h
+    vision.h \
+    log.h \
+    config.h \
+    positions.h
 
 

@@ -64,20 +64,78 @@ int Decision::getStrategy()
 
 void Decision::updateObjectives()
 {
-
     int robotFunc[3];
     if(strategy == FIXED3)
     {
-        teamRobot[2].setFunction(STRIKER);
+        teamRobot[2].setFunction(OFFDEFENDER);
         teamRobot[1].setFunction(DEFENDER);
         teamRobot[0].setFunction(GOALKEEPER);
     }
 
     else if(strategy == FIXED2_0)
     {
-        teamRobot[2].setFunction(STRIKER);
-        teamRobot[1].setFunction(LIBERO);
-        teamRobot[0].setFunction(GOALKEEPER);
+        if(ball.pos.x <= (centroidAtk.x + centroidDef.x) / 2) {
+            teamRobot[2].setFunction(OFFDEFENDER);
+            teamRobot[1].setFunction(LIBERO);
+            teamRobot[0].setFunction(GOALKEEPER);
+            CORE_INFO("LIBERO");
+        }
+        else {
+            teamRobot[2].setFunction(OFFDEFENDER);
+            teamRobot[1].setFunction(LIBERO);
+            teamRobot[0].setFunction(GOALKEEPER);
+        }
+        // else // bola no ataque
+        // {
+        //     CORE_INFO("FAKE9");
+        //     if(flagTrocaFS == true)
+        //     {
+        //         const int DEFAULT_STRIKER = 2;
+        //         const int DEFAULT_FAKE9 = 1;
+        //         const int DEFAULT_GOOALKEEPER = 0;
+        //         if(euclidean_dist(teamRobot[1].getDataState().pos, ball.pos) < euclidean_dist(teamRobot[2].getDataState().pos, ball.pos))
+        //         {
+        //             if(teamRobot[1].getDataState().pos.x < (ball.pos.x))
+        //             {
+        //                 robotFunc[1] = STRIKER;
+        //                 robotFunc[2] = FAKE9;
+        //             }
+        //             else if(teamRobot[2].getDataState().pos.x < (ball.pos.x))
+        //             {
+        //                 robotFunc[1] = FAKE9;
+        //                 robotFunc[2] = STRIKER;
+        //             }
+        //             else
+        //             {
+        //                 robotFunc[DEFAULT_STRIKER] = STRIKER;
+        //                 robotFunc[DEFAULT_FAKE9] = FAKE9;
+        //             }
+        //         }
+        //         else
+        //         {
+        //             if(teamRobot[2].getDataState().pos.x < (ball.pos.x ))
+        //             {
+        //                 robotFunc[1] = FAKE9;
+        //                 robotFunc[2] = STRIKER;
+        //             }
+        //             else if(teamRobot[1].getDataState().pos.x < (ball.pos.x ))
+        //             {
+        //                 robotFunc[1] = STRIKER;
+        //                 robotFunc[2] = FAKE9;
+        //             }
+        //             else
+        //             {
+        //                 robotFunc[DEFAULT_STRIKER] = STRIKER;
+        //                 robotFunc[DEFAULT_FAKE9] = FAKE9;
+        //             }
+        //         }
+        //         if(lastF != F)
+        //         {
+        //             flagTrocaFS = false;
+        //             clockTrocaFS = clock();
+        //         }
+        //     }
+        // }
     }
     else if(strategy == FULL_ATK){
         robotFunc[0] = DEFENDER;

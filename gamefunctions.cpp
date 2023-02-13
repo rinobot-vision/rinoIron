@@ -1068,115 +1068,131 @@ void GameFunctions::volante()
 
 void GameFunctions::libero()
 {
-    flagRepulsiveBall = false;
-    flagRepulsiveStriker = false;
     dataState robot = teamRobot[indexRobot].getDataState();
-    int striker;
-    for(int i = 0; i < 3; i++)
-    {
-        if(teamRobot[i].getFunction() == STRIKER)
-            striker = i;
-    }
-    float time = 0.05;
-    Point2f ballPrev= Point2f(ball.pos.x + time*ball.vel.x, ball.pos.y + time*ball.vel.y);
-    ballPrev = ball.pos;
-    int distbola = 40;
-    if(ball.pos.x > 75)
-    {
-        goal.y = ballPrev.y;
-        if(ball.vel.x >= 0)
-        {
-            goal.x = ballPrev.x - distbola;
-            lastX = goal.x;
-        }
-        else
-        {
-            if(ball.pos.x >= robot.pos.x)
-            {
-                goal.x = lastX;
-            }
-            else
-            {
-                goal.x = ball.pos.x - distbola;
-            }
-        }
-        if(euclidean_dist(robot.pos, teamRobot[striker].getDataState().pos) < 15)
-        {
-            k_larg = 0.04;
-            flagRepulsiveStriker = true;
-        }
-    }
-    else if(ball.pos.x <= 75 && ball.pos.x > defenderLine + centroidDef.x)
-    {
-        goal.x = defenderLine;
-        goal.y = ball.pos.y;
-    }
-    else
-    {
-        if(ball.pos.y < 30)
-        {
-            goal = ball.pos;
-            flagKickBall = true;
-            gSize = gSizeW;
-            de = deW;
-            Kr = KrW;
-            thetaDir = 55.0;
-        }
-        else if(ball.pos.y > 100)
-        {
-            goal = ball.pos;
-            flagKickBall = true;
-            gSize = gSizeW;
-            de = deW;
-            Kr = KrW;
-            thetaDir = -55.0;
-        }
+    int striker = 2;
+    // flagRepulsiveBall = false;
+    // flagRepulsiveStriker = false;
+    // dataState robot = teamRobot[indexRobot].getDataState();
+    // int striker = 2;
+    // for(int i = 0; i < 3; i++)
+    // {
+    //     if(teamRobot[i].getFunction() == STRIKER)
+    //         striker = i;
+    // }
+    // float time = 0.05;
+    // Point2f ballPrev= Point2f(ball.pos.x + time*ball.vel.x, ball.pos.y + time*ball.vel.y);
+    // //ballPrev = ball.pos;
+    // int distbola = 40;
+    // if(ball.pos.x > 75)
+    // {
+    //     goal.y = ballPrev.y;
+    //     if(ball.vel.x >= 0)
+    //     {
+    //         goal.x = ballPrev.x - distbola;
+    //         lastX = goal.x;
+    //     }
+    //     else
+    //     {
+    //         if(ball.pos.x >= robot.pos.x)
+    //         {
+    //             goal.x = lastX;
+    //         }
+    //         else
+    //         {
+    //             goal.x = ball.pos.x - distbola;
+    //         }
+    //     }
+    //     if(euclidean_dist(robot.pos, teamRobot[striker].getDataState().pos) < 15)
+    //     {
+    //         k_larg = 0.04;
+    //         flagRepulsiveStriker = true;
+    //     }
+    // }
+    // else if(ball.pos.x <= 75 && ball.pos.x > defenderLine + centroidDef.x)
+    // {
+    //     goal.x = defenderLine;
+    //     goal.y = ball.pos.y;
+    // }
+    // else
+    // {
+    //     if(ball.pos.y < 30)
+    //     {
+    //         goal = ball.pos;
+    //         flagKickBall = true;
+    //         gSize = gSizeW;
+    //         de = deW;
+    //         Kr = KrW;
+    //         thetaDir = 55.0;
+    //     }
+    //     else if(ball.pos.y > 100)
+    //     {
+    //         goal = ball.pos;
+    //         flagKickBall = true;
+    //         gSize = gSizeW;
+    //         de = deW;
+    //         Kr = KrW;
+    //         thetaDir = -55.0;
+    //     }
 
-        else
-        {
-            goal.x = defenderLine + centroidDef.x;
-            goal.y = ball.pos.y;
-            if(ball.vel.x > 0 && ball.pos.x < robot.pos.x)
-            {
-                if(ball.pos.y < robot.pos.y)
-                    goal.y = goal.y + 15;
-                else
-                    goal.y = goal.y - 15;
-            }
-            if(ball.pos.x < centroidDef.x + 15)
-            {
-                if(ball.pos.y > centroidDef.y)
-                {
-                    goal.x = centroidDef.x + 37;
-                    goal.y = centroidDef.y + 42;
-                }
-                else
-                {
-                    goal.x = centroidDef.x + 37;
-                    goal.y = centroidDef.y - 42;
-                }
-            }
-        }
-    }
+    //     else
+    //     {
+    //         goal.x = defenderLine + centroidDef.x;
+    //         goal.y = ball.pos.y;
+    //         if(ball.vel.x > 0 && ball.pos.x < robot.pos.x)
+    //         {
+    //             if(ball.pos.y < robot.pos.y)
+    //                 goal.y = goal.y + 15;
+    //             else
+    //                 goal.y = goal.y - 15;
+    //         }
+    //         if(ball.pos.x < centroidDef.x + 15)
+    //         {
+    //             if(ball.pos.y > centroidDef.y)
+    //             {
+    //                 goal.x = centroidDef.x + 37;
+    //                 goal.y = centroidDef.y + 42;
+    //             }
+    //             else
+    //             {
+    //                 goal.x = centroidDef.x + 37;
+    //                 goal.y = centroidDef.y - 42;
+    //             }
+    //         }
+    //     }
+    // }
 
-    if(ball.pos.x > defenderLine + centroidDef.x && ball.pos.x < robot.pos.x)
+    // if(ball.pos.x > defenderLine + centroidDef.x && ball.pos.x < robot.pos.x)
+    // {
+    //     goal.y = ball.pos.y;
+    //     goal.x = defenderLine + centroidDef.x;
+    //     flagRepulsiveBall = true;
+    // }
+
+    // if(goal.x < (centroidDef.x + 25) &&(goal.y < centroidDef.y + 20 && goal.y > centroidDef.y - 20))
+    //     goal.x = goal.x + 15;
+
+    // thetaDir = PI/2;
+    // thePhi = angleTwoPoints(robot.pos, goal);
+    // if(flagKickBall)
+    //     univectorField(robot,Point2f(0,0));
+    // if(flagRepulsiveBall)
+    //     thePhi = repulsiveMath(robot, ball.pos);
+    // if (flagRepulsiveStriker)
+    //     thePhi = repulsiveMath(robot,teamRobot[striker].getDataState().pos);
+    Point2f _goal = Position::getLiberoGoal(ball.pos, robot.pos);
+    if(_goal.x == INT_MIN && _goal.y == INT_MIN) {
+        thePhi = 0;
+        return;
+    }
+    
+    if(euclidean_dist(robot.pos, teamRobot[striker].getDataState().pos) < 15)
     {
-        goal.y = ball.pos.y;
-        goal.x = defenderLine + centroidDef.x;
-        flagRepulsiveBall = true;
-    }
-
-    if(goal.x < (centroidDef.x + 25) &&(goal.y < centroidDef.y + 20 && goal.y > centroidDef.y - 20))
-        goal.x = goal.x + 15;
-
-    thetaDir = PI/2;
-    thePhi = angleTwoPoints(robot.pos, goal);
-    if(flagKickBall)
-        univectorField(robot,Point2f(0,0));
-    if(flagRepulsiveBall)
-        thePhi = repulsiveMath(robot, ball.pos);
-    if (flagRepulsiveStriker)
         thePhi = repulsiveMath(robot,teamRobot[striker].getDataState().pos);
+    }
+    else {
+        thePhi = angleTwoPoints(robot.pos, goal);
+    }
+    //std::cout << goal << std::endl;
 }
 
 

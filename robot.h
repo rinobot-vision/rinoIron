@@ -13,6 +13,8 @@
 #define LIBERO 7
 #define STRIKERAGAINSTEAM 8
 #define OFFDEFENDER 9
+//Definido para testes
+#define NONE 10
 
 
 class robot

@@ -4,6 +4,7 @@
 #include <QMutex>
 #include <QThread>
 #include "gamefunctions.h"
+#include "config.h"
 
 class Mover: public QThread
 {
