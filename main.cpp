@@ -19,6 +19,8 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
+    std::string team(argv[1]);
+    std::cout << team << std::endl << std::endl;
     QCoreApplication a(argc, argv);
 
     // Starting timer
@@ -33,6 +35,9 @@ int main(int argc, char *argv[]) {
 
     // Setting our color as BLUE at left side
     VSSRef::Color ourColor = VSSRef::Color::YELLOW;
+    if(team == "blue") {
+        ourColor = VSSRef::Color::BLUE;
+    }
     bool ourSideIsLeft;
 
     if(ourColor == VSSRef::Color::BLUE){
@@ -92,7 +97,7 @@ int main(int argc, char *argv[]) {
         }
         if(ourColor == VSSRef::Color::YELLOW){
             robots_n =  detection.robots_yellow_size();
-            cout<<robots_n<<endl;
+            //cout<<robots_n<<endl;
         }
         if(ourColor == VSSRef::Color::BLUE){
             bola.pos.x = (length+ball.x())*100;
