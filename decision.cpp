@@ -74,17 +74,10 @@ void Decision::updateObjectives()
 
     else if(strategy == FIXED2_0)
     {
-        if(ball.pos.x <= (centroidAtk.x + centroidDef.x) / 2) {
-            teamRobot[2].setFunction(OFFDEFENDER);
-            teamRobot[1].setFunction(LIBERO);
-            teamRobot[0].setFunction(GOALKEEPER);
-            CORE_INFO("LIBERO");
-        }
-        else {
-            teamRobot[2].setFunction(OFFDEFENDER);
-            teamRobot[1].setFunction(LIBERO);
-            teamRobot[0].setFunction(GOALKEEPER);
-        }
+        teamRobot[2].setFunction(OFFDEFENDER);
+        teamRobot[1].setFunction(LIBERO);
+        teamRobot[0].setFunction(GOALKEEPER);
+        CORE_INFO("LIBERO");
         // else // bola no ataque
         // {
         //     CORE_INFO("FAKE9");

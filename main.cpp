@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
     Core::Log::Init();
     Core::Config::Init();
     Position::Init(CONFIG_VAR("defenderDivisions"));
+    CORE_INFO("Code initialized");
     QCoreApplication a(argc, argv);
 
     // Starting timer
@@ -98,7 +99,6 @@ int main(int argc, char *argv[]) {
         }
         if(ourColor == VSSRef::Color::YELLOW){
             robots_n =  detection.robots_yellow_size();
-            cout<<robots_n<<endl;
         }
         if(ourColor == VSSRef::Color::BLUE){
             bola.pos.x = (length+ball.x())*100;

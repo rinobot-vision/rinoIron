@@ -659,6 +659,7 @@ void GameFunctions::defender()
             else
             {
                 thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos,goal);
+                thetaDir = 90;
             }
         }
     }
@@ -1180,16 +1181,13 @@ void GameFunctions::libero()
     // if (flagRepulsiveStriker)
     //     thePhi = repulsiveMath(robot,teamRobot[striker].getDataState().pos);
     Point2f _goal = Position::getLiberoGoal(ball.pos, robot.pos);
-    if(_goal.x == INT_MIN && _goal.y == INT_MIN) {
-        thePhi = 0;
-        return;
-    }
-    
-    if(euclidean_dist(robot.pos, teamRobot[striker].getDataState().pos) < 15)
+    goal = _goal;
+    if(euclidean_dist(robot.pos, teamRobot[striker].getDataState().pos) < 10)
     {
         thePhi = repulsiveMath(robot,teamRobot[striker].getDataState().pos);
     }
     else {
+        CORE_TRACE("Goal x: {} and Goal y: {}", goal.x, goal.y);
         thePhi = angleTwoPoints(robot.pos, goal);
     }
     //std::cout << goal << std::endl;
