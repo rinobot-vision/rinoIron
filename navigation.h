@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include "robot.h"
+#include "config.h"
 #define FIXED3 0
 #define FULL_ATK 1
 #define SAFE_FULL_ATK 2

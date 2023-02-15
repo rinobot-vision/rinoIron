@@ -22,6 +22,8 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
+    std::string team(argv[1]);
+    std::cout << team << std::endl << std::endl;
     Core::Log::Init();
     Core::Config::Init();
     Position::Init(CONFIG_VAR("defenderDivisions"));
@@ -40,6 +42,9 @@ int main(int argc, char *argv[]) {
 
     // Setting our color as BLUE at left side
     VSSRef::Color ourColor = VSSRef::Color::YELLOW;
+    if(team == "blue") {
+        ourColor = VSSRef::Color::BLUE;
+    }
     bool ourSideIsLeft;
 
     if(ourColor == VSSRef::Color::BLUE){

@@ -10,8 +10,8 @@
 #ifndef POSITION_H
 #define POSITION_H
 
-#define INTERVAL_MAX 110
-#define INTERVAL_MIN 30
+#define INTERVAL_MAX 135
+#define INTERVAL_MIN 40
 
 class Position {
     public:

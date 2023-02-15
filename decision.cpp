@@ -74,7 +74,7 @@ void Decision::updateObjectives()
 
     else if(strategy == FIXED2_0)
     {
-        teamRobot[2].setFunction(OFFDEFENDER);
+        teamRobot[2].setFunction(STRIKER);
         teamRobot[1].setFunction(LIBERO);
         teamRobot[0].setFunction(GOALKEEPER);
         CORE_INFO("LIBERO");

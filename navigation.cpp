@@ -2,9 +2,9 @@
 
 Navigation::Navigation()
 {
-    gSizeW = 0.60;
-    deW = 2;
-    KrW = 0.5;
+    gSizeW = CONFIG_VAR("GSIZEW"); // 0.6
+    deW = CONFIG_VAR("DEW"); //2
+    KrW =  CONFIG_VAR("KRW");//0.5 
     k_larg = 0.055;
 }
 

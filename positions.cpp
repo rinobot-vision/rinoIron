@@ -34,6 +34,9 @@ Point2f Position::getLiberoGoal(Point2f ballPos, Point2f liberoPos) {
     if(ballPos.x > INTERVAL_MAX) {
         goal.x = references.back();
     }
+    else if(ballPos.x < INTERVAL_MIN) {
+        goal.x = references.front();
+    }
     goal.y = ballPos.y;
     lastSafePos = goal;
     return goal;
