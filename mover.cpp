@@ -122,7 +122,6 @@ void Mover::goalkeeper()
 {
     float limiarTheta = 90;
     float theta = robotFunctions[indexRobot]->getDirection();
-    cout<<"Theta: "<< theta<<endl;
     float deltaLimiar = 30;
     alpha = ajustaAngulo(theta - teamRobot[indexRobot].getDataState().angle);
     float v, w;

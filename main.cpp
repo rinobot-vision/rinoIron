@@ -19,7 +19,7 @@
 #include "config.h"
 #include "positions.h"
 
-#define PENALTY_KICK_GOALKEEPER_POS 0.69
+#define PENALTY_KICK_GOALKEEPER_POS 0.75
 
 using namespace std;
 
@@ -165,6 +165,21 @@ int main(int argc, char *argv[]) {
 
         if(GameWindow.get_strategy() == 0 || GameWindow.get_strategy() == 4) // FIXED && Libero
         {
+            if(refereeClient->getLastFoul() == VSSRef::Foul::KICKOFF) {
+                if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){
+                    replacerClient->placeRobot(2, ourSideIsLeft ? -0.08 : 0.24, 0, ourSideIsLeft ? 20 : 0);
+                    replacerClient->placeRobot(1, ourSideIsLeft ? -0.4 : 0.4, 0, 90);
+                    replacerClient->placeRobot(0, ourSideIsLeft ? -PENALTY_KICK_GOALKEEPER_POS : PENALTY_KICK_GOALKEEPER_POS, 0, 90);
+                    replacerClient->sendFrame();
+                }
+                if(refereeClient->getLastFoulColor() == VSSRef::Color::YELLOW){
+
+                    replacerClient->placeRobot(2, ourSideIsLeft ? -0.24 : 0.08, 0, ourSideIsLeft ? 0 : 20);
+                    replacerClient->placeRobot(1, ourSideIsLeft ? -0.4 : 0.4, 0, 90);
+                    replacerClient->placeRobot(0, ourSideIsLeft ? -PENALTY_KICK_GOALKEEPER_POS : PENALTY_KICK_GOALKEEPER_POS, 0, 90);
+                    replacerClient->sendFrame();
+                }
+            }
             if(refereeClient->getLastFoul() == VSSRef::Foul::PENALTY_KICK){
                 if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){
                     replacerClient->placeRobot(2, ourSideIsLeft ? 0.3 : -0.1, 0, -20);
@@ -210,15 +225,15 @@ int main(int argc, char *argv[]) {
 
             if(refereeClient->getLastFoul() == VSSRef::Foul::GOAL_KICK){
                 if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){
-                    replacerClient->placeRobot(2, ourSideIsLeft ?  -0.45 : -0.2, 0.15 , 0);
-                    replacerClient->placeRobot(1, ourSideIsLeft ?  -0.68 : 0.38 , ourSideIsLeft ? (ball.y() > 0 ? 0.35 : -0.35): 0 , 0);
-                    replacerClient->placeRobot(0, ourSideIsLeft ? -0.55 : 0.71, 0, 0);
+                    replacerClient->placeRobot(2, ourSideIsLeft ?  -0.45 : -0.2, -ball.y() > 0 ? -0.55 : 0.55 , 0);
+                    replacerClient->placeRobot(1, ourSideIsLeft ?  -0.40 : 0.38 , 0 , 0);
+                    replacerClient->placeRobot(0, ourSideIsLeft ? -0.66 : 0.71, ourSideIsLeft ? (ball.y() > 0 ? 0.35 : -0.35): 0 , 0);
                     replacerClient->sendFrame();
                 }
                 if(refereeClient->getLastFoulColor() == VSSRef::Color::YELLOW){
                     replacerClient->placeRobot(2, ourSideIsLeft ?  0.2 : 0.45, 0.2,0);
                     replacerClient->placeRobot(1, ourSideIsLeft ?  -0.38 : 0.68 , ourSideIsLeft ? 0: (ball.y() > 0 ? 0.35 : -0.35) , 0);
-                    replacerClient->placeRobot(0, ourSideIsLeft ?  -0.71 : 0.55 , 0, 0);
+                    replacerClient->placeRobot(0, ourSideIsLeft ?  -0.71 : 0.66 , 0.35, 0);
                     replacerClient->sendFrame();
                 }
             }
@@ -277,7 +292,7 @@ int main(int argc, char *argv[]) {
                     replacerClient->sendFrame();
                 }
                 if(refereeClient->getLastFoulColor() == VSSRef::Color::YELLOW){
-                    replacerClient->placeRobot(2, ourSideIsLeft ?  0.25 : 0.45, ourSideIsLeft ? 0.35 : 0.2,0);
+                    replacerClient->placeRobot(2, ourSideIsLeft ?  0.25 : 0.45, ourSideIsLeft ? 0.35 : 0.6,0);
                     replacerClient->placeRobot(0, ourSideIsLeft ?  -0.38 : 0.68 , ourSideIsLeft ? 0: (ball.y() > 0 ? 0.35 : -0.35) , 0);
                     replacerClient->placeRobot(1, ourSideIsLeft ?  0.25 : 0.55 ,ourSideIsLeft ? -0.35 : 0, 0);
                     replacerClient->sendFrame();
