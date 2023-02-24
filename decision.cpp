@@ -67,7 +67,7 @@ void Decision::updateObjectives()
     int robotFunc[3];
     if(strategy == FIXED3)
     {
-        teamRobot[2].setFunction(OFFDEFENDER);
+        teamRobot[2].setFunction(STRIKER);
         teamRobot[1].setFunction(DEFENDER);
         teamRobot[0].setFunction(GOALKEEPER);
     }
@@ -77,7 +77,6 @@ void Decision::updateObjectives()
         teamRobot[2].setFunction(STRIKER);
         teamRobot[1].setFunction(LIBERO);
         teamRobot[0].setFunction(GOALKEEPER);
-        CORE_INFO("LIBERO");
         // else // bola no ataque
         // {
         //     CORE_INFO("FAKE9");
@@ -331,206 +330,75 @@ void Decision::updateObjectives()
         teamRobot[2].setFunction(robotFunc[2]);
 
     }
-    else if(strategy == FULL_ATK){
-        robotFunc[0] = DEFENDER;
-        if(ball.pos.x <= (centroidAtk.x + centroidDef.x)/2)
+    else if(strategy == SAFE_FULL_ATK){
+        int robotFunc[3];
+        robotFunc[0] = GOALKEEPER;
+        if(ball.pos.x < (centroidAtk.x + centroidDef.x)/2)
         {
-            if(flagTrocaGS == true)
+            Point2f defenderPoint;
+            defenderPoint.y = ball.pos.y;
+            defenderPoint.x = 48;
+            if(fabs(teamRobot[1].getDataState().pos.x - LineD) < fabs(teamRobot[2].getDataState().pos.x - LineD))
             {
-                if(euclidean_dist(teamRobot[1].getDataState().pos, centroidDef) < euclidean_dist(teamRobot[2].getDataState().pos, centroidDef))
+                if(euclidean_dist(teamRobot[1].getDataState().pos, ball.pos) < euclidean_dist(teamRobot[2].getDataState().pos, ball.pos))
                 {
-                    robotFunc[1] = GOALKEEPER;
+                    robotFunc[1] = DEFENDER;
                     robotFunc[2] = STRIKER;
                 }
                 else
                 {
                     robotFunc[1] = STRIKER;
-                    robotFunc[2] = GOALKEEPER;
+                    robotFunc[2] = DEFENDER;
                 }
-                for(int i = 0; i <= 2; i++)
-                {
-                    if(robotFunc[i] == GOALKEEPER)
-                    {
-                        G = i;
-                    }
-                    if(robotFunc[i] == DEFENDER)
-                    {
-                        D = i;
-                    }
-                    if(robotFunc[i] == STRIKER)
-                    {
-                        S = i;
-                    }
-                }
-                lastS = S;
-                lastG = G;
-                lastD = D;
             }
             else
             {
-                timeTrocaGS = (float) (clock() - clockTrocaGS)/CLOCKS_PER_SEC;
-                if(timeTrocaGS > 5)
+                if(euclidean_dist(teamRobot[2].getDataState().pos, ball.pos) < euclidean_dist(teamRobot[1].getDataState().pos, ball.pos))
                 {
-                    flagTrocaGS = true;
+                    robotFunc[1] = STRIKER;
+                    robotFunc[2] = DEFENDER;
                 }
                 else
                 {
-                    robotFunc[lastS] = STRIKER;
-                    robotFunc[lastD] = DEFENDER;
-                    robotFunc[lastG] = GOALKEEPER;
+                    robotFunc[1] = DEFENDER;
+                    robotFunc[2] = STRIKER;
                 }
             }
         }
-
-        else // bola no ataque
+        else
         {
-
-            if(flagTrocaFS == true)
+            if(euclidean_dist(teamRobot[1].getDataState().pos, ball.pos) < euclidean_dist(teamRobot[2].getDataState().pos, ball.pos))
             {
-                if(euclidean_dist(teamRobot[1].getDataState().pos, ball.pos) < euclidean_dist(teamRobot[2].getDataState().pos, ball.pos))
+                if(teamRobot[1].getDataState().pos.x < (ball.pos.x + 4.5))
                 {
-                    if(teamRobot[1].getDataState().pos.x < (ball.pos.x))
-                    {
-                        robotFunc[1] = STRIKER;
-                        robotFunc[2] = FAKE9;
-                    }
-                    else if(teamRobot[2].getDataState().pos.x < (ball.pos.x))
-                    {
-                        robotFunc[1] = FAKE9;
-                        robotFunc[2] = STRIKER;
-                    }
-                    else
-                    {
-                        robotFunc[lastS] = STRIKER;
-                        robotFunc[lastF] = FAKE9;
-                    }
+                    robotFunc[1] = STRIKER;
+                    robotFunc[2] = FAKE9;
                 }
                 else
                 {
-                    if(teamRobot[2].getDataState().pos.x < (ball.pos.x ))
-                    {
-                        robotFunc[1] = FAKE9;
-                        robotFunc[2] = STRIKER;
-                    }
-                    else if(teamRobot[1].getDataState().pos.x < (ball.pos.x ))
-                    {
-                        robotFunc[1] = STRIKER;
-                        robotFunc[2] = FAKE9;
-                    }
-                    else
-                    {
-                        robotFunc[lastS] = STRIKER;
-                        robotFunc[lastF] = FAKE9;
-                    }
+                    robotFunc[1] = FAKE9;
+                    robotFunc[2] = STRIKER;
                 }
-                for(int i = 0; i <= 2; i++)
-                {
-                    if(robotFunc[i] == FAKE9)
-                    {
-                        F = i;
-                    }
-                    if(robotFunc[i] == DEFENDER)
-                    {
-                        D = i;
-                    }
-                    if(robotFunc[i] == STRIKER)
-                    {
-                        S = i;
-                    }
-                }
-
-                if(lastF != F)
-                {
-                    flagTrocaFS = false;
-                    clockTrocaFS = clock();
-                }
-
-                lastF = F;
-                lastD = D;
-                lastS = S;
-                lastM = F;
-                lastW = S;
-                tempT = 3;
             }
-
-            if(CRUZAMENTO == true)
+            else
             {
-                int indexMidfield;
-                if(euclidean_dist(ball.pos, teamRobot[1].getDataState().pos) < euclidean_dist(ball.pos, teamRobot[2].getDataState().pos))
+                if(teamRobot[2].getDataState().pos.x < (ball.pos.x + 4.5))
                 {
-                    indexMidfield = 2;
+                    robotFunc[1] = FAKE9;
+                    robotFunc[2] = STRIKER;
                 }
                 else
                 {
-                    indexMidfield = 1;
-                }
-                Point2f metaMidfield = Point2f(centroidAtk.x - 45, getCentroidAtk().y);
-                if((euclidean_dist(teamRobot[indexMidfield].getDataState().pos, metaMidfield) < 25) && (ball.pos.y > centroidAtk.y + 30 || ball.pos.y < centroidAtk.y - 30) && (ball.pos.x > (centroidAtk.x - 25)) && (ball.pos.x >= 0))
-                {
-                    if(euclidean_dist(teamRobot[1].getDataState().pos, ball.pos) < euclidean_dist(teamRobot[2].getDataState().pos, ball.pos))
-                    {
-                        robotFunc[1] = WING;
-                        robotFunc[2] = MIDFIELD;
-                        lastW = 1;
-                        lastM = 2;
-                    }
-                    else
-                    {
-                        robotFunc[2] = WING;
-                        robotFunc[1] = MIDFIELD;
-                        lastW = 2;
-                        lastM = 1;
-                    }
-                    flagTrocaFS = false;
-                    flagCrossing = true;
-                    clockTrocaFS = clock();
-                    tempT = 2;
-
-                }
-
-            }
-
-            if ( ball.pos.x < teamRobot[lastM].getDataState().pos.x)
-            {
-                if(flagCrossing)
-                {
-                    flagTrocaFS = true;
+                    robotFunc[1] = STRIKER;
+                    robotFunc[2] = FAKE9;
                 }
             }
 
-            if(flagTrocaFS == false)
-            {
-                timeTrocaFS = (float) (clock() - clockTrocaFS)/CLOCKS_PER_SEC;
-                timeTrocaFS = timeTrocaFS * 10;
-
-                if(timeTrocaFS > tempT)
-                {
-                    flagTrocaFS = true;
-                    flagCrossing = false;
-                }
-                else
-                {
-                    if(flagCrossing)
-                    {
-                        robotFunc[lastW] = WING;
-                        robotFunc[lastM] = MIDFIELD;
-                        robotFunc[lastD] = DEFENDER;
-                    }
-                    else
-                    {
-                        robotFunc[lastS] = STRIKER;
-                        robotFunc[lastD] = DEFENDER;
-                        robotFunc[lastF] = FAKE9;
-                    }
-                }
-            }
-
+            //Crossing
         }
-
         teamRobot[0].setFunction(robotFunc[0]);
         teamRobot[1].setFunction(robotFunc[1]);
         teamRobot[2].setFunction(robotFunc[2]);
-
     }
     else if(strategy == NS)
     {

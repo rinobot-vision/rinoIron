@@ -1,10 +1,17 @@
 {
     "strategy": 4,
-    "kp": 12.5,
-    "kd": 2.5,
+    "kp": 18,
+    "kd": 3,
     "ki": 0,
     "defenderDivisions": 7,
     "GSIZEW": 0.6,
-    "DEW": 4,
-    "KRW": 0.5
+    "DEW": 2.5,
+    "KRW": 0.5,
+    "DEFENDERDISTGIRO": 8.8,
+    "GOALKEEPERDISTGIRO": 8.45,
+    "LIBERODISTGIRO": 8,
+    "goalkeeperKP": 6.0,
+    "goalkeeperKD": 0.54,
+
+    "bezierConsts": [15, 6, 15, 25, 1, 0.1]
 }

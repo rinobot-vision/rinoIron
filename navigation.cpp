@@ -128,6 +128,12 @@ float Navigation::hyperbolicSpiral2(dataState robo)
 
 float Navigation::repulsiveMath(dataState robo, Point2f obj)
 {
+    if(euclidean_dist(robo.pos, obj) < 10) {
+        deW = (float)(CONFIG_VAR("DEW")) / 2;
+    }
+    else {
+        deW = CONFIG_VAR("DEW");
+    }
     float rot_angle = PI/2;
     float k_const = 1; // k_larg: Quanto menor mais desvia [0.1 , 0.01]
     float m = (goal.y-obj.y)/(goal.x-obj.x);

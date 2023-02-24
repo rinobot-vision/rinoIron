@@ -11,6 +11,7 @@
 #include "math.h"
 #include "iostream"
 #include "fstream"
+#include "config.h"
 
 #include <eigen3/Eigen/Dense>
 
@@ -25,7 +26,6 @@
 
 
 #define CLEAR(x) memset(&(x), 0, sizeof(x))
-
 
 // se definido como 1 o programa calcula e mostra o tempo de execução
 
@@ -79,6 +79,9 @@ double angleTwoPoints(Point2f p, Point2f q);
 double euclidean_dist(Point2f p, Point2f q);
 double ajustaAngulo(double);
 
-
+Point2f newPoint(Point2f pos, double th, float d);
+vector<Point2f> createPath(dataState robot, Point2f target, double th, float C[]);
+vector<vector<double>> bezier(vector<Point2f> points, float precision);
+double angleBezier(dataState robot, Point2f target, double th);
 
 #endif // UTILS_H

@@ -5,6 +5,7 @@
 #include <QThread>
 #include "gamefunctions.h"
 #include "config.h"
+#include "log.h"
 
 class Mover: public QThread
 {
@@ -44,7 +45,7 @@ public:
     void atkSituationInv();
     float twiddle();
     void rotate_def();
-
+    float propV = 20;
     float vMax = 70;
     float kp;
     float kd;

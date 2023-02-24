@@ -10,7 +10,7 @@
 #ifndef POSITION_H
 #define POSITION_H
 
-#define INTERVAL_MAX 135
+#define INTERVAL_MAX 140
 #define INTERVAL_MIN 40
 
 class Position {
@@ -18,6 +18,8 @@ class Position {
         static Point2f getLiberoGoal(Point2f ballPos, Point2f liberoPos);
         static void Init(int divisions);
         static bool checkPosOnDefenderLine(Point2f liberoPos);
+        static void setGoalKeeperPos(Point2f _goalKeeperPos);
+        static void setStrikerPos(Point2f _strikerPos);
     private:
         static std::vector<float> references;
         static int _divisions;
@@ -25,6 +27,9 @@ class Position {
         static Point2f upperBoundPos;
         static Point2f lowerBoundPos;
         static Point2f centroidDef;
+        static Point2f centroidAtk;
+        static Point2f strikerPos;
+        static Point2f goalKeeperPos;
 };
 
 #endif

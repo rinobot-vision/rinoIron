@@ -19,15 +19,18 @@
 #include "config.h"
 #include "positions.h"
 
+#define PENALTY_KICK_GOALKEEPER_POS 0.69
+
 using namespace std;
 
 int main(int argc, char *argv[]) {
     std::string team(argv[1]);
     std::cout << team << std::endl << std::endl;
-    Core::Log::Init();
+    //Core::Log::Init();
     Core::Config::Init();
     Position::Init(CONFIG_VAR("defenderDivisions"));
-    CORE_INFO("Code initialized");
+    //CORE_INFO("Code initialized");
+    std::cout << "System initialized" << std::endl;
     QCoreApplication a(argc, argv);
 
     // Starting timer
@@ -160,20 +163,20 @@ int main(int argc, char *argv[]) {
         //            actuatorClient->sendCommand(i, Velocidades[i].x, Velocidades[i].y);
         //        }
 
-        if(GameWindow.get_strategy() == 0) // FIXED
+        if(GameWindow.get_strategy() == 0 || GameWindow.get_strategy() == 4) // FIXED && Libero
         {
             if(refereeClient->getLastFoul() == VSSRef::Foul::PENALTY_KICK){
                 if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){
                     replacerClient->placeRobot(2, ourSideIsLeft ? 0.3 : -0.1, 0, -20);
                     replacerClient->placeRobot(1, ourSideIsLeft ? -0.4 : -0.1, -0.2, 90);
-                    replacerClient->placeRobot(0, ourSideIsLeft ? -0.72 : 0.72, 0, 90);
+                    replacerClient->placeRobot(0, ourSideIsLeft ? -PENALTY_KICK_GOALKEEPER_POS : PENALTY_KICK_GOALKEEPER_POS, 0, 90);
                     replacerClient->sendFrame();
                 }
                 if(refereeClient->getLastFoulColor() == VSSRef::Color::YELLOW){
 
                     replacerClient->placeRobot(2, ourSideIsLeft ? 0.1 : -0.3, 0, 20);
                     replacerClient->placeRobot(1, ourSideIsLeft ? 0.1 : 0.4 , -0.1, 90);
-                    replacerClient->placeRobot(0, ourSideIsLeft ? -0.72 : 0.72, 0.05, 90);
+                    replacerClient->placeRobot(0, ourSideIsLeft ? -PENALTY_KICK_GOALKEEPER_POS : PENALTY_KICK_GOALKEEPER_POS, 0.05, 90);
                     replacerClient->sendFrame();
                 }
             }
@@ -303,7 +306,7 @@ int main(int argc, char *argv[]) {
         if(refereeClient->getLastFoul() == VSSRef::Foul::KICKOFF){
             replacerClient->placeRobot(2, ourSideIsLeft ? -0.24 : 0.24, 0, 0);
             replacerClient->placeRobot(1, ourSideIsLeft ? -0.38 : 0.38, 0, 90);
-            replacerClient->placeRobot(0, ourSideIsLeft ? -0.72 : 0.75, 0, 90);
+            replacerClient->placeRobot(0, ourSideIsLeft ? -0.70 : 0.70, 0, 90);
             replacerClient->sendFrame();
         }
 

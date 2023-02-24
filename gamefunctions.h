@@ -21,6 +21,7 @@ public:
     void setCrossing(bool);
     void setAtkSituationInv(bool);
     void setDefenderLine(float);
+    float getGoalKeeperLine();
     void setVolanteLine(float);
     float getDefenderLine();
     float getVolanteLine();
@@ -39,6 +40,7 @@ public:
     void volante();
     void libero();
     void newstriker();
+    void strikerBezier();
     void offdefender();
     void PlotPath(int i, robot);
     void setPlot(bool );
@@ -106,6 +108,7 @@ private:
     bool flagGrabM = false;
 
     float defenderLine = 36;
+    float goalkeeperLine = 5;
     float volanteLine = 38;
     float lastX = defenderLine;
     float offLine = 115;
