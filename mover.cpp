@@ -130,11 +130,13 @@ void Mover::goalkeeper()
     float ballVel = sqrt(pow(ball.vel.x, 2) + pow(ball.vel.y, 2));
     float vFollow, vPrev;
     if (ballVel > 0.3){
-        vFollow = 0.8;
-        vPrev = 0.8;
+        vFollow = 1;
+        vPrev = 1;
     }
-    vFollow = 0.8;
-    vPrev = 0.6;
+    else {
+        vFollow = 0.7;
+        vPrev = 0.7;
+    }
 
     kp = 6.2f;
     kd = 0.38f;
