@@ -74,6 +74,7 @@ int main(int argc, char *argv[]) {
 
     vision *Vision;
     gamewindow GameWindow;
+    GameWindow.setStrategy(atoi(argv[2]));
     Vision = new vision;
     vector<robot> rinobot; //___
 

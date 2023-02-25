@@ -1181,7 +1181,7 @@ void GameFunctions::fake9()
 {
     flagAvoidDefender = false;
 
-    float distx = 20;
+    float distx = 20;   
     float disty = 20;
     dataState robot = teamRobot[indexRobot].getDataState();
     dataState killer = teamRobot[indexRobot].getDataState();

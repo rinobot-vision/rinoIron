@@ -129,7 +129,7 @@ private:
     bool flagTrocaGS = true;
     bool flagTrocaFS = true;
     float LineD = 48;
-    int G, D, S, F, L, M, lastG, lastD, lastS, lastM, lastL, lastF, lastW;
+    int G, D, S, F, L, M, lastG, lastD = 1, lastS = 2, lastM, lastL, lastF, lastW;
     int strikerIndex = 1;
     int liberoIndex = 2;
     KNN knnfunction;

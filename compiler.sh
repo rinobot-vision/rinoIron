@@ -1,1 +1,1 @@
-cd build  && make && cd .. && cd bin && ./FIRAClient $1
+cd build  && make && cd .. && cd bin && ./FIRAClient $1 $2

@@ -5,7 +5,10 @@
 #include <QThread>
 #include "gamefunctions.h"
 #include "config.h"
+#include "list"
 #include "log.h"
+
+using namespace std;
 
 class Mover: public QThread
 {
@@ -54,6 +57,14 @@ public:
 
     Point2f posTemp;
     Point2f prevGoal;
+
+    float contRev = 0;
+    bool revFlag = false;
+
+    float AllSecondClock;
+    list<Point2f> grabPos = {{-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}};
+    float BlockClock;
+
 
     bool inverte=false;
     bool sentido = false;

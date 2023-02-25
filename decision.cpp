@@ -331,74 +331,106 @@ void Decision::updateObjectives()
 
     }
     else if(strategy == SAFE_FULL_ATK){
-        int robotFunc[3];
         robotFunc[0] = GOALKEEPER;
-        if(ball.pos.x < (centroidAtk.x + centroidDef.x)/2)
+        if(ball.pos.x <= (centroidAtk.x + centroidDef.x)/2)
         {
-            Point2f defenderPoint;
-            defenderPoint.y = ball.pos.y;
-            defenderPoint.x = 48;
-            if(fabs(teamRobot[1].getDataState().pos.x - LineD) < fabs(teamRobot[2].getDataState().pos.x - LineD))
+            robotFunc[lastS] = STRIKER;
+            robotFunc[lastD] = DEFENDER;
+        }
+        else // bola no ataque
+        {
+
+            if(flagTrocaFS == true)
             {
                 if(euclidean_dist(teamRobot[1].getDataState().pos, ball.pos) < euclidean_dist(teamRobot[2].getDataState().pos, ball.pos))
                 {
-                    robotFunc[1] = DEFENDER;
-                    robotFunc[2] = STRIKER;
+                    if(teamRobot[1].getDataState().pos.x < (ball.pos.x))
+                    {
+                        robotFunc[1] = STRIKER;
+                        robotFunc[2] = FAKE9;
+                    }
+                    else if(teamRobot[2].getDataState().pos.x < (ball.pos.x))
+                    {
+                        robotFunc[1] = FAKE9;
+                        robotFunc[2] = STRIKER;
+                    }
+                    else
+                    {
+                        robotFunc[lastS] = STRIKER;
+                        robotFunc[lastF] = FAKE9;
+                    }
                 }
                 else
                 {
-                    robotFunc[1] = STRIKER;
-                    robotFunc[2] = DEFENDER;
+                    if(teamRobot[2].getDataState().pos.x < (ball.pos.x ))
+                    {
+                        robotFunc[1] = FAKE9;
+                        robotFunc[2] = STRIKER;
+                    }
+                    else if(teamRobot[1].getDataState().pos.x < (ball.pos.x ))
+                    {
+                        robotFunc[1] = STRIKER;
+                        robotFunc[2] = FAKE9;
+                    }
+                    else
+                    {
+                        robotFunc[lastS] = STRIKER;
+                        robotFunc[lastF] = FAKE9;
+                    }
                 }
+                for(int i = 0; i <= 2; i++)
+                {
+                    if(robotFunc[i] == FAKE9)
+                    {
+                        F = i;
+                    }
+                    if(robotFunc[i] == GOALKEEPER)
+                    {
+                        G = i;
+                    }
+                    if(robotFunc[i] == STRIKER)
+                    {
+                        S = i;
+                    }
+                }
+
+                if(lastF != F)
+                {
+                    flagTrocaFS = false;
+                    clockTrocaFS = clock();
+                }
+
+                lastF = F;
+                lastG = G;
+                lastS = S;
+                lastD = F;
+
+                tempT = 4.5;
             }
-            else
+
+            if(flagTrocaFS == false)
             {
-                if(euclidean_dist(teamRobot[2].getDataState().pos, ball.pos) < euclidean_dist(teamRobot[1].getDataState().pos, ball.pos))
+                timeTrocaFS = (float) (clock() - clockTrocaFS)/CLOCKS_PER_SEC;
+                timeTrocaFS = timeTrocaFS * 10;
+
+                if(timeTrocaFS > tempT)
                 {
-                    robotFunc[1] = STRIKER;
-                    robotFunc[2] = DEFENDER;
+                    flagTrocaFS = true;
                 }
                 else
                 {
-                    robotFunc[1] = DEFENDER;
-                    robotFunc[2] = STRIKER;
-                }
-            }
-        }
-        else
-        {
-            if(euclidean_dist(teamRobot[1].getDataState().pos, ball.pos) < euclidean_dist(teamRobot[2].getDataState().pos, ball.pos))
-            {
-                if(teamRobot[1].getDataState().pos.x < (ball.pos.x + 4.5))
-                {
-                    robotFunc[1] = STRIKER;
-                    robotFunc[2] = FAKE9;
-                }
-                else
-                {
-                    robotFunc[1] = FAKE9;
-                    robotFunc[2] = STRIKER;
-                }
-            }
-            else
-            {
-                if(teamRobot[2].getDataState().pos.x < (ball.pos.x + 4.5))
-                {
-                    robotFunc[1] = FAKE9;
-                    robotFunc[2] = STRIKER;
-                }
-                else
-                {
-                    robotFunc[1] = STRIKER;
-                    robotFunc[2] = FAKE9;
+                    robotFunc[lastS] = STRIKER;
+                    robotFunc[lastG] = GOALKEEPER;
+                    robotFunc[lastF] = FAKE9;
                 }
             }
 
-            //Crossing
         }
+
         teamRobot[0].setFunction(robotFunc[0]);
         teamRobot[1].setFunction(robotFunc[1]);
         teamRobot[2].setFunction(robotFunc[2]);
+
     }
     else if(strategy == NS)
     {
