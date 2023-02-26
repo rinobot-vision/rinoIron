@@ -203,7 +203,7 @@ void Mover::defender()
 {
 
     float vMaxD = 0.65;
-    float vFollow = 0.50;
+    float vFollow = 0.80;
     float vMaxPrevision = 0.85;
     float vDelta = 1*vMaxD;
     float limiarTheta = 90;

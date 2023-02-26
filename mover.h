@@ -49,7 +49,7 @@ public:
     float twiddle();
     void rotate_def();
     float propV = 20;
-    float vMax = 70;
+    float vMax = 90;
     float kp;
     float kd;
     float temp = 0;
