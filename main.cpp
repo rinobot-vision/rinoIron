@@ -183,14 +183,14 @@ int main(int argc, char *argv[]) {
             }
             if(refereeClient->getLastFoul() == VSSRef::Foul::PENALTY_KICK){
                 if(refereeClient->getLastFoulColor() == VSSRef::Color::BLUE){
-                    replacerClient->placeRobot(2, ourSideIsLeft ? 0.3 : -0.1, 0, -20);
+                    replacerClient->placeRobot(2, ourSideIsLeft ? 0.3 : -0.1, 0, -25);
                     replacerClient->placeRobot(1, ourSideIsLeft ? -0.4 : -0.1, -0.2, 90);
                     replacerClient->placeRobot(0, ourSideIsLeft ? -PENALTY_KICK_GOALKEEPER_POS : PENALTY_KICK_GOALKEEPER_POS, 0, 90);
                     replacerClient->sendFrame();
                 }
                 if(refereeClient->getLastFoulColor() == VSSRef::Color::YELLOW){
 
-                    replacerClient->placeRobot(2, ourSideIsLeft ? 0.1 : -0.3, 0, 20);
+                    replacerClient->placeRobot(2, ourSideIsLeft ? 0.1 : -0.3, 0, 25);
                     replacerClient->placeRobot(1, ourSideIsLeft ? 0.1 : 0.4 , -0.1, 90);
                     replacerClient->placeRobot(0, ourSideIsLeft ? -PENALTY_KICK_GOALKEEPER_POS : PENALTY_KICK_GOALKEEPER_POS, 0.05, 90);
                     replacerClient->sendFrame();
