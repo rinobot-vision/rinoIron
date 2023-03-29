@@ -591,6 +591,12 @@ void GameFunctions::defender()
     flagKickBall = false;
     dataState robot = teamRobot[indexRobot].getDataState();
     dataState goalk = teamRobot[indexRobot].getDataState();
+    dataState strikerPos;
+    for(int i = 0; i < 3; i++) {
+        if(teamRobot[i].getFunction() == STRIKER) strikerPos = teamRobot[i].getDataState();
+    }
+
+    bool flagAvoidStriker = false;
     
     if (teamRobot[0].getFunction() == GOALKEEPER)
         goalk = teamRobot[0].getDataState();
@@ -642,6 +648,7 @@ void GameFunctions::defender()
         {
             goal.x = defenderLine + centroidDef.x;
             goal.y = ball.pos.y;
+            flagAvoidStriker = true;
             if(ball.pos.x < centroidDef.x + 15)
             {
                 if(ball.pos.y > centroidDef.y)
@@ -683,6 +690,10 @@ void GameFunctions::defender()
                 thetaDir = 90;
             }
         }
+    }
+    if(flagAvoidStriker) {
+        k_larg = 0.1;
+        thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), strikerPos.pos);
     }
 
 
@@ -742,12 +753,12 @@ void GameFunctions::goalkeeper()
             if(prevY < centroidDef.y - 20)
             {
                 goal.x = centroidDef.x + 3;
-                goal.y = centroidDef.y - 16;
+                goal.y = centroidDef.y - 15;
             }
             else if(prevY > centroidDef.y + 20)
             {
                 goal.x = centroidDef.x + 3;
-                goal.y = centroidDef.y + 16;
+                goal.y = centroidDef.y + 15;
             }
             else
             {
@@ -1184,7 +1195,7 @@ void GameFunctions::fake9()
 {
     flagAvoidDefender = false;
 
-    float distx = 20;
+    float distx = 20;   
     float disty = 20;
     dataState robot = teamRobot[indexRobot].getDataState();
     dataState killer = teamRobot[indexRobot].getDataState();

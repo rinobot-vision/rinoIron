@@ -75,6 +75,11 @@ float Navigation::hyperbolicSpiral(dataState robo)
 
 float Navigation::hyperbolicSpiral2(dataState robo)
 {
+    gSize = 0.4;
+    de = 1.5;
+    Kr =  0.5; 
+    k_larg = 0.055;
+
     float phi;
     float theta, rho, y_aux, yl, yr, phi_cw, phi_ccw;
     float pl[2], pr[2], vec[2];

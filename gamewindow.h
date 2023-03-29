@@ -26,6 +26,10 @@ public:
     Mover *mover[3];
     int get_strategy();
 
+    void setStrategy(int strategy) {
+        deecision.setStrategy(strategy);
+    }
+
     void EnviaVelocidades(Point2f Velocidades[3]);
     json config;
 private:
