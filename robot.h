@@ -15,6 +15,7 @@
 #define OFFDEFENDER 9
 //Definido para testes
 #define NONE 10
+#define COLLABORATOR 11
 
 
 class robot
@@ -40,7 +41,13 @@ public:
     Point2f getPosition();
     double getAngle();
     Point2f getVelocidade();
+    void setVMax(float v) {
+        this->_vMax = v;
+    }
 
+    float getVMax() {
+        return this->_vMax;
+    }
 
 private:
     dataState kinetic;
@@ -50,6 +57,7 @@ private:
     double ki;
     int index;
     int time;
+    float _vMax = 70.f;
 };
 
 #endif // ROBOT_H

@@ -330,6 +330,11 @@ void Decision::updateObjectives()
         teamRobot[2].setFunction(robotFunc[2]);
 
     }
+    else if(strategy == COLLABORATOR_STR) {
+        teamRobot[2].setFunction(COLLABORATOR);
+        teamRobot[1].setFunction(COLLABORATOR);
+        teamRobot[0].setFunction(GOALKEEPER);
+    }
     else if(strategy == SAFE_FULL_ATK){
         int robotFunc[3];
         robotFunc[0] = GOALKEEPER;

@@ -13,6 +13,7 @@
 #define FULL_ATK 1
 #define SAFE_FULL_ATK 2
 #define FIXED2_0 4
+#define COLLABORATOR_STR 5
 #ifndef DECISION_H
 #define DECISION_H
 

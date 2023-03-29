@@ -56,6 +56,9 @@ void Mover::run()
         case OFFDEFENDER:
             offdefender();
             break;
+        case COLLABORATOR:
+            collaborator();
+            break;
         default:
             break;
         }
@@ -1706,6 +1709,238 @@ void Mover::offdefender()
 void Mover::setGains(MatrixXd mat)
 {
     robotGains = mat;
+}
+
+void Mover::collaborator() {
+    Point2f robotPos = teamRobot[indexRobot].getDataState().pos;
+    float robotAngle = teamRobot[indexRobot].getDataState().angle;
+    float vMax = teamRobot[indexRobot].getVMax()*0.01;
+    std::cout << "Vmax: [ " << vMax << " ]" << std::endl;
+    float dist = euclidean_dist(robotPos,ball.pos);
+
+    float ct = 2;
+
+    if(tempoTroca == 0){
+
+        if(temp == 0)
+        {
+            posTemp = robotPos;
+            clockInvert = clock();
+        }
+        //cout<<"distancia: "<<euclidean_dist(robotPos,posTemp)<<endl;
+        if(euclidean_dist(robotPos,posTemp) <= 1)
+        {
+            temp = (float) (clock() - clockInvert)/CLOCKS_PER_SEC;
+            // cout<<"temp"<<temp<<endl;
+            if(temp >= 3){
+                //   cout<<"tempoo"<<endl;
+                inverte = true;
+                clockTroca = clock();
+                temp = 0;
+            }else {
+                inverte = false;
+            }
+        }else {
+            inverte = false;
+            temp = 0;
+        }
+    }
+    if(inverte == true)
+    {
+        tempoTroca = (float) (clock() - clockTroca)/CLOCKS_PER_SEC;
+        if(tempoTroca > 7)
+            tempoTroca = 0;
+    }
+
+    if(dist < 25 && dist > 12 && robotPos.x < ball.pos.x)
+    {
+        vMax = vMax*dist*(0.20)/(13);//*0.3/16;
+        if(vMax < 0.7)
+            vMax = 0.7;
+    }
+
+    //    vMax = this->vMax;
+
+    //    if (teempo<=ct)
+    //    {
+    //        vMax=teempo*vMax/ct;
+    //    }
+
+
+    float limiarTheta = 90;
+    float deltaLimiar = 30;
+    float vDelta = 0.8*vMax;
+    float v, w, theta;
+
+
+    // Angulo do CPU
+
+    theta = robotFunctions[indexRobot]->getDirection();
+    //PID
+
+    if(inverte == true)
+    {
+        if(robotAngle > ajustaAngulo(theta) - 90 && robotAngle < ajustaAngulo(theta) + 90)
+            sentido = false; //tras
+        else {
+            sentido = true; //frente
+        }
+    }
+    alpha = theta - robotAngle;
+    alpha = ajustaAngulo(alpha);
+    alphaS = alpha;
+
+    inverte = false;
+    if(inverte == false)
+    {
+        //                    cout << "alpha: " << alpha << endl;
+        if((fabs(alpha) < 10)||(fabs(alpha) > 170))
+        {
+            //cout << "Reto" << endl;
+            //             kp = 20;
+            //             kd = 4;
+        }
+        else
+        {
+            //cout << "Curva" << endl;
+        }
+        if (fabs(alpha) <= limiarTheta)
+        {
+            v = -vDelta * fabs(alpha) / limiarTheta + vMax;
+            w = (kp * alpha / 180) + (kd * (alpha - lastAlpha));
+            limiarTheta = 90 - deltaLimiar;
+        }
+        else
+        {
+            alpha = ajustaAngulo(alpha + 180);
+            v = vDelta * fabs(alpha) / limiarTheta - vMax;
+            w = (kp * alpha / 180) + (kd * (alpha - lastAlpha));
+            limiarTheta = 90 + deltaLimiar;
+        }
+    }
+    else
+    {
+        if(sentido == false)
+        {
+            //            cout<<"lado 1: "<<endl;
+            alpha = ajustaAngulo(alpha + 180);
+            v = vDelta * fabs(alpha) / limiarTheta - vMax;
+            w = (kp * alpha / 180) + (kd * (alpha - lastAlpha));
+            limiarTheta = 90 + deltaLimiar;
+        }else //if(sentido == true)
+        {
+            //            cout<<"lado 2: "<<endl;
+            v = -vDelta * fabs(alpha) / limiarTheta + vMax;
+            w = (kp * alpha / 180) + (kd * (alpha - lastAlpha));
+            limiarTheta = 90 - deltaLimiar;
+        }
+    }
+
+
+    if(w > 21)
+        w = 21;
+    if(w < -21)
+        w = -21;
+
+    if(robotFunctions[indexRobot]->getStopOnGoal() == true)
+    {
+        theta = robotFunctions[indexRobot]->getDirection();
+        alpha = theta - robotAngle;
+        alpha = ajustaAngulo(alpha);
+        if(euclidean_dist(robotPos,robotFunctions[indexRobot]->goal) < 25)
+        {
+            vMax *= 0.6;
+            vDelta = vMax*0.8;
+        }
+        if (fabs(alpha) <= limiarTheta)
+        {
+            v = -vDelta * fabs(alpha) / limiarTheta + vMax;
+            w = (kp * alpha / 180) + (kd * (alpha - lastAlpha));
+            limiarTheta = 90 - deltaLimiar;
+        }
+        else
+        {
+            alpha = ajustaAngulo(alpha + 180);
+            v = vDelta * fabs(alpha) / limiarTheta - vMax;
+            w = (kp * alpha / 180) + (kd * (alpha - lastAlpha));
+            limiarTheta = 90 + deltaLimiar;
+        }
+
+        //                cout << "Waiting for stopp" << endl;
+        if((fabs(robotPos.x - robotFunctions[indexRobot]->getGoal().x) < 3) && (fabs(robotPos.y - robotFunctions[indexRobot]->getGoal().y) < 3) )
+        {
+            v = 0;
+            if(fabs(robotAngle) > 85 && fabs(robotAngle) < 95)
+            {
+                w = 0;
+                //                                    cout << "chegou" << endl;
+            }
+            else
+            {
+                //                                                    cout << "ajusta" << endl;
+                alpha = 90 - robotAngle;
+                alpha = ajustaAngulo(alpha);
+                if (fabs(alpha) <= limiarTheta)
+                {
+                    w = 3*kp*alpha/180;
+                }
+                else
+                {
+                    alpha = ajustaAngulo(alpha+180);
+                    w = 3*kp*alpha/180;
+                }
+            }
+        }
+
+    }
+
+    lVel = (v - w*l)*100;
+    rVel = (v + w*l)*100;
+    //rVel = lVel = 0;
+    //  cout << "alpha: " << alpha << endl;
+    //    cout << "derivada: " << alpha - lastAlpha << endl;
+    //  cout << "v: " << v << endl;
+    //cout << "w: " << w << endl;
+    //        cout << "lVel: " << lVel << endl;
+    //        cout << "rVel: " << rVel << endl;
+
+    lastAlpha = alpha;
+    if(robotFunctions[indexRobot]->getAgainsTheTeam() == false)
+        rotate();
+    else
+        rotateInv();
+
+    if(robotFunctions[indexRobot]->getAtkSituation() == true)
+    {
+        if(againstTheTeam == false)
+        {
+            if(euclidean_dist(ball.pos,robotPos) < 10)
+            {
+                if(firstAceleration == true)
+                {
+                    clockAceleration = clock();
+                }
+                firstAceleration = false;
+                atkSituation();
+            }
+            else
+            {
+                firstAceleration = true;
+            }
+        }
+        else
+            atkSituationInv();
+
+    }
+    else
+    {
+        firstAceleration = true;
+    }
+
+    //    if(robotFunctions[indexRobot]->getKickState() == true)
+    //    {
+    //        kickPenalty();
+    //    }
 }
 
 MatrixXd Mover::getGains()

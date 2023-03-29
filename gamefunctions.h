@@ -7,6 +7,7 @@
 #include "log.h"
 #include "positions.h"
 
+
 class GameFunctions: public Navigation
 {
 public:
@@ -40,6 +41,7 @@ public:
     void volante();
     void libero();
     void newstriker();
+    void collaborator();
     void strikerBezier();
     void offdefender();
     void PlotPath(int i, robot);
@@ -62,6 +64,7 @@ public:
     ~GameFunctions();
     int getStrategy();
     void setStrategy(int);
+    bool priority(Point2f _thisPos, Point2f _anotherRobotPos);
 
     bool airball;
     bool fedUp;
