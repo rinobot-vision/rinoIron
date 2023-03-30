@@ -61,6 +61,7 @@ public:
     void setIndex(int);
     Point2f getGoal();
     float getDirection();
+    float getVmax();
     ~GameFunctions();
     int getStrategy();
     void setStrategy(int);

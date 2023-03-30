@@ -31,6 +31,7 @@ public:
     float thePhi;
     float alpha;
     float k_larg;
+    float Vmax;
     Point2f goal;
     vector<Point2f> plotThePhi;
     vector<int> path;

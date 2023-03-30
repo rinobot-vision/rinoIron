@@ -1714,7 +1714,7 @@ void Mover::setGains(MatrixXd mat)
 void Mover::collaborator() {
     Point2f robotPos = teamRobot[indexRobot].getDataState().pos;
     float robotAngle = teamRobot[indexRobot].getDataState().angle;
-    float vMax = teamRobot[indexRobot].getVMax()*0.01;
+    float vMax = robotFunctions[indexRobot]->getVmax() * 0.01;
     std::cout << "Vmax: [ " << vMax << " ]" << std::endl;
     float dist = euclidean_dist(robotPos,ball.pos);
 

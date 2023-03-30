@@ -202,6 +202,10 @@ bool GameFunctions::getAgainsTheTeam()
     return againstTheTeam;
 }
 
+float GameFunctions::getVmax() {
+    return Vmax;
+}
+
 void GameFunctions::striker()
 {
     // Quando a bola estiver no ataque e o atacante estiver atrás do defender, ele desvia dele.
@@ -213,7 +217,7 @@ void GameFunctions::striker()
     de = deW;
     Kr = KrW;
     dataState robot = teamRobot[indexRobot].getDataState();
-
+    Vmax = 60;
     dataState goalk = teamRobot[indexRobot].getDataState();
     if (teamRobot[0].getFunction() == GOALKEEPER)
         goalk = teamRobot[0].getDataState();
@@ -765,12 +769,9 @@ void GameFunctions::goalkeeper()
                 goal.x = centroidDef.x + 3;
                 goal.y = prevY;
 
-//                if (ball.pos.x < centroidDef.x + 25) {
-//                    goal.y = ball.pos.y;
-//                }
-//                else {
-//                    goal.y = prevY;
-//                }
+            //    if (ball.pos.x < centroidDef.x + 15) {
+            //        goal = ball.pos;
+            //    }
             }
         }
         else
@@ -1672,6 +1673,7 @@ void GameFunctions::collaborator() {
     Kr = KrW;
     float time;
     dataState selectRobot = teamRobot[indexRobot].getDataState();
+    Point2f spacing = {30, 135}; //Distância e ângulo
 
     dataState goalk = teamRobot[indexRobot].getDataState();
     dataState collaboratorK = teamRobot[indexRobot].getDataState();
@@ -2037,32 +2039,51 @@ void GameFunctions::collaborator() {
         flagGrab = false;
     }
 
-    if(ball.pos.x < centroidDef.x + 30)
-    {
-        goal.x = centroidDef.x + 50;
-        if(ball.pos.y > centroidDef.y)
-        {
-            goal.y = goalk.pos.y - 30;
-        }
-        else
-        {
-            goal.y = goalk.pos.y + 30;
-        }
-        thePhi = angleTwoPoints(selectRobot.pos, goal);
-    }
-    if(!priority(teamRobot.at(indexRobot).getDataState().pos, collaboratorK.pos)) {
-        if(ball.pos.x < 135.f) {
-            robot* selectedRobot = &teamRobot.at(indexRobot);
-            selectedRobot->setVMax(60.f);
+    bool main = priority(selectRobot.pos, collaboratorK.pos);
+    Vmax = teamRobot[indexRobot].getVMax();
+
+    // Área de defesa
+    if (ball.pos.x < centroidDef.x + 15 && abs(ball.pos.y - centroidDef.y) < 35)  {
+        if(ball.pos.y < centroidDef.y + 20 && ball.pos.y > centroidDef.y - 20) {
+            if (main) {
+                goal = {centroidDef.x + 20, centroidDef.y + 40};
+            }
+            else {
+                goal = {centroidDef.x + 30, centroidDef.y - 40};
+            }
         }
         else {
-            goal.x = 120.f;
-            thePhi = angleTwoPoints(selectRobot.pos, goal);
+            if(main) {
+                goal = ball.pos;
+            }
+            else {
+                goal = {centroidDef.x + 30, centroidDef.y - 40};
+            }
         }
+        setStopOnGoal(true);
     }
+    // Área de ataque
+    else if (ball.pos.x > centroidAtk.x - 20 && abs(ball.pos.y - centroidDef.y) < 35 && !main) {
+        if (ball.pos.y < centroidAtk.y) {
+            goal = {centroidAtk.x - 20, centroidAtk.y + 40};
+        }
+        else {
+            goal = {centroidAtk.x - 20, centroidAtk.y - 40};
+        }
+        setStopOnGoal(true);
+    }
+    // Resto do campo
     else {
-        robot* selectedRobot = &teamRobot.at(indexRobot);
-        selectedRobot->setVMax(70.f);
+        if (!main) {
+            Vmax = teamRobot[indexRobot].getVMax() * 0.6;
+            
+            if (ball.pos.y < collaboratorK.pos.y) {
+                goal = newPoint(goal, -spacing.y, spacing.x);
+            }
+            else {
+                goal = newPoint(goal, spacing.y, spacing.x);
+            }
+        }
     }
 }
 
