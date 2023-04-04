@@ -16,6 +16,11 @@ vector<robot> Decision::getTeamRobots()
     return teamRobot;
 }
 
+vector<robot> Decision::getEnemyRobots()
+{
+    return enemyRobot;
+}
+
 Point2f Decision::getCentroidDef()
 {
     return centroidDef;
@@ -34,6 +39,11 @@ dataState Decision::getBall()
 void Decision::setRobots(vector<robot> r)
 {
     teamRobot = r;
+}
+
+void Decision::setEnemy(vector<robot> r)
+{
+    enemyRobot = r;
 }
 
 void Decision::setAreas(Point2f def, Point2f atk)
@@ -931,6 +941,13 @@ void Decision::updateObjectives()
         teamRobot[0].setFunction(robotFunc[0]);
         teamRobot[1].setFunction(robotFunc[1]);
         teamRobot[2].setFunction(robotFunc[2]);
+    }
+
+    else if (strategy == DYNAMIC_STRAT)
+    {
+        teamRobot[0].setFunction(GOALKEEPER);
+        teamRobot[1].setFunction(DEFENDER);
+        teamRobot[2].setFunction(DYNAMIC);
     }
 }
 

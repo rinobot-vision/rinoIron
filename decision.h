@@ -13,6 +13,7 @@
 #define FULL_ATK 1
 #define SAFE_FULL_ATK 2
 #define FIXED2_0 4
+#define DYNAMIC_STRAT 5
 #ifndef DECISION_H
 #define DECISION_H
 
@@ -94,6 +95,7 @@ public:
     explicit Decision();
     ~Decision();
     void setRobots(vector<robot>);
+    void setEnemy(vector<robot>);
     void setAreas(Point2f, Point2f);
     void setBall(dataState);
     void setKnnInformation(KNN);
@@ -103,13 +105,14 @@ public:
     vector<Point2f> pathPoints[3];
     clock_t clockChange;
     vector<robot> getTeamRobots();
+    vector<robot> getEnemyRobots();
     Point2f getCentroidDef();
     Point2f getCentroidAtk();
     dataState getBall();
 
 
 private:
-    vector<robot> teamRobot;
+    vector<robot> teamRobot, enemyRobot;
     float tempT;
     Point2f centroidDef, centroidAtk;
     dataState ball;

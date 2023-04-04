@@ -32,6 +32,7 @@ public:
     void Control();
     void newstriker();
     void offdefender();
+    void collaborator();
     void setGameFunctions(GameFunctions *, GameFunctions *, GameFunctions *);
     void setRobots(vector<robot>);
     void setAreas(Point2f, Point2f);

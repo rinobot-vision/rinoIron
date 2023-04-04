@@ -92,6 +92,11 @@ void GameFunctions::setRobots(vector<robot> robots)
     teamRobot = robots;
 }
 
+void GameFunctions::setEnemy(vector<robot> robots)
+{
+    enemyRobot = robots;
+}
+
 void GameFunctions::setAreas(Point2f def, Point2f atk)
 {
     if(!againstTheTeam){
@@ -197,6 +202,10 @@ bool GameFunctions::getStopOnGoal()
 bool GameFunctions::getAgainsTheTeam()
 {
     return againstTheTeam;
+}
+
+float GameFunctions::getVmax() {
+    return Vmax;
 }
 
 void GameFunctions::striker()
@@ -784,6 +793,444 @@ void GameFunctions::goalkeeper()
 //        kickBall();
 //    }
     
+}
+
+bool GameFunctions::priority(Point2f _thisPos, Point2f _anotherRobotPos) {
+    float distRobot = euclidean_dist(_thisPos, ball.pos);
+    float distCollaborator = euclidean_dist(_anotherRobotPos, ball.pos);
+
+    float selfPositionAheadOfBall = ball.pos.x - _thisPos.x;
+    float collaboratorPositionAheadOfBall = ball.pos.x - _anotherRobotPos.x;
+
+    float selfPriority = distRobot + selfPositionAheadOfBall;
+    float collaboratorPriority = distCollaborator + collaboratorPositionAheadOfBall;
+
+
+    return selfPriority > collaboratorPriority;
+}
+
+void GameFunctions::collaborator() {
+
+    flagGoAhead = false;
+    setStopOnGoal(false);
+    airball=false;
+    flagAvoidDefender = false;
+    de = deW;
+    Kr = KrW;
+    float time;
+    dataState selectRobot = teamRobot[indexRobot].getDataState();
+    Point2f spacing = {30, 135}; //Distância e ângulo
+
+    dataState goalk = teamRobot[indexRobot].getDataState();
+    dataState collaboratorK = teamRobot[indexRobot].getDataState();
+    if (teamRobot[0].getFunction() == GOALKEEPER)
+        goalk = teamRobot[0].getDataState();
+    else if (teamRobot[1].getFunction() == GOALKEEPER)
+        goalk = teamRobot[1].getDataState();
+    else if (teamRobot[2].getFunction() == GOALKEEPER)
+        goalk = teamRobot[2].getDataState();
+    
+    if (teamRobot[0].getFunction() == DYNAMIC && indexRobot != 0)
+        collaboratorK = teamRobot[0].getDataState();
+    else if (teamRobot[1].getFunction() == DYNAMIC && indexRobot != 1)
+        collaboratorK = teamRobot[1].getDataState();
+    else if (teamRobot[2].getFunction() == DYNAMIC && indexRobot != 2)
+        collaboratorK = teamRobot[2].getDataState();
+    
+    if(ball.vel.x > 0 && euclidean_dist(teamRobot[indexRobot].getDataState().pos, ball.pos)>12)
+        time = 0.07;
+    else
+        time = 0;
+
+    Point2f ballPrev= Point2f(ball.pos.x + time*ball.vel.x, ball.pos.y + time*ball.vel.y);
+    goal = ballPrev;
+
+    if (selectRobot.pos.x > goal.x)
+        gSize = 0;
+    else
+        gSize = 0.6;
+
+    if(ball.pos.x < centroidDef.x + defenderLine && ball.pos.y < centroidDef.y + 40 && ball.pos.y > centroidDef.y - 40 && againstTheTeam == false )
+    {
+        goal.x = centroidDef.x + 24;
+        goal.y = ball.pos.y;
+        setStopOnGoal(true);
+        airball = true;
+    }
+    else if(ball.pos.x < centroidDef.x + defenderLine)
+    {
+        if(ball.pos.y < centroidDef.y - 30)
+        {
+            goal.x = defenderLine - 3;
+            goal.y = centroidDef.y - 25;
+            setStopOnGoal(true);
+        }
+        if(ball.pos.y > centroidDef.y + 30)
+        {
+            goal.x = defenderLine + 3;
+            goal.y = centroidDef.y + 25;
+            setStopOnGoal(true);
+        }
+
+    }
+    else
+    {
+        if (ball.pos.y < 15  || ball.pos.y > 115)
+        {
+            if(ball.pos.y < centroidAtk.y)
+                if(againstTheTeam == false)
+                    thetaDir = (-25*PI/180);
+                else
+                    thetaDir = (-135*PI/180);
+            if(ball.pos.y > centroidAtk.y)
+                if(againstTheTeam == false)
+                    thetaDir = (25*PI/180);
+                else
+                    thetaDir = (-225*PI/180);
+        }
+        else
+        {
+            Point2f aux, minLimit, maxLimit;
+            aux.x = centroidAtk.x;
+            aux.y = selectRobot.pos.y;
+            float theta = angleTwoPoints(ball.pos,selectRobot.pos);
+            float alpha = angleTwoPoints(selectRobot.pos,ball.pos);
+            float cat_ad = euclidean_dist(selectRobot.pos,aux);
+            float cat_op = cat_ad*tan(theta*PI/180);
+
+            minLimit.x = centroidAtk.x;
+            minLimit.y = 55;
+            maxLimit.x = centroidAtk.x;
+            maxLimit.y = 75;
+
+            Point2f ang_point;
+            if(ball.pos.y < selectRobot.pos.y)
+                ang_point.y = selectRobot.pos.y - fabs(cat_op);
+            else
+                ang_point.y = selectRobot.pos.y + fabs(cat_op);
+
+            ang_point.x = centroidAtk.x;
+
+            if((ang_point.y < 80) && (ang_point.y > 50) && selectRobot.pos.x < ball.pos.x)
+            {
+                thetaDir = (alpha*M_PI/180);
+                atkPoint = ang_point;
+                setAtkSituation(true);
+                flagGoAhead = true;
+                //thetaDir = 0;
+            }
+            else
+            {
+                if(selectRobot.pos.x < ball.pos.x)
+                {
+                    if(ang_point.y <50)
+                    {
+                        thetaDir = angleTwoPoints(ball.pos,maxLimit)*PI/180;
+                        atkPoint = maxLimit;
+                        //thetaDir = 0;
+                        atkPoint = centroidAtk;
+                    }
+                    else if(ang_point.y > 80)
+
+                    {
+                        thetaDir = angleTwoPoints(ball.pos,minLimit)*PI/180;
+                        atkPoint = minLimit;
+                        //thetaDir = 0;
+                        atkPoint = centroidAtk;
+                    }
+                    else
+                    {
+                        //thetaDir = angleTwoPoints(ball.pos,centroidAtk)*PI/180;
+                        thetaDir = 0;
+                        atkPoint = centroidAtk;
+                    }
+                }
+                else
+                {
+                    thetaDir = 0;
+                }
+                setAtkSituation(false);
+            }
+
+            if(ball.pos.y >= 50 && ball.pos.y <= 80 && (selectRobot.pos.y < 50 || selectRobot.pos.y > 80))
+            {
+                thetaDir = 0;
+            }
+            if(againstTheTeam == false)
+            {
+                if(ball.pos.x > centroidAtk.x - 10)
+                {
+                    if(ball.pos.y > centroidDef.y - 65 && ball.pos.y < centroidDef.y - 20)
+                    {
+                        thetaDir = (40*PI/180);
+                    }
+                    if(ball.pos.y < centroidDef.y + 65 && ball.pos.y > centroidDef.y + 20)
+                    {
+                        thetaDir = (-40*PI/180);
+
+                    }
+                }
+            }
+            else
+            {
+                if(ball.pos.x < centroidAtk.x + 10)
+                {
+                    if(ball.pos.y > centroidDef.y - 65 && ball.pos.y < centroidDef.y - 20)
+                    {
+                        thetaDir = (140*PI/180);
+                    }
+                    if(ball.pos.y < centroidDef.y + 65 && ball.pos.y > centroidDef.y + 20)
+                    {
+                        thetaDir = (-140*PI/180);
+                    }
+                }
+            }
+
+        }
+        if(ball.pos.y < 20  || ball.pos.y > 110)
+        {
+            if(selectRobot.pos.x > ball.pos.x)
+            {
+                if(ball.pos.y < 35  && selectRobot.pos.y < ball.pos.y)
+                {
+                    thetaDir = (-90 * PI / 180);
+                    de = 0.7;
+                    Kr = 0;
+                }
+                if(ball.pos.y > 95 && selectRobot.pos.y > ball.pos.y)
+                {
+                    thetaDir = (90 * PI / 180);
+                    de = 0.7;
+                    Kr = 0;
+                }
+            }
+        }
+    }
+
+    if(againstTheTeam == false)
+    {
+        if(goal.x > centroidDef.x + 35)
+        {
+            if(goal.x > centroidAtk.x-10)
+            {
+                if(selectRobot.pos.x > goal.x)
+                {
+                    de = 0.7;
+                    Kr = 0;
+                    thetaDir = 0;
+                }
+            }
+            else
+            {
+                if(selectRobot.pos.y<25||selectRobot.pos.y>105)
+                {
+                    de = 1;
+                    Kr = 0;
+
+                }
+            }
+
+            //            else
+            //            {
+            //                de = deW;
+            //                Kr = KrW;
+            //            }
+
+        }
+        else
+        {
+            de = 1;
+            Kr = 0;
+            gSize = gSizeW;
+
+            if(goal.y > 65)
+                thetaDir = 90*PI/180;
+            else
+                thetaDir = -90*PI/180;
+
+            if(ball.pos.x < 20)
+            {
+                if(goal.y > 65 && selectRobot.pos.y < ball.pos.y)
+                    thetaDir = angleTwoPoints(selectRobot.pos,ball.pos)*PI/180;
+                if(goal.y < 65 && selectRobot.pos.y > ball.pos.y)
+                    thetaDir = angleTwoPoints(selectRobot.pos,ball.pos)*PI/180;
+
+            }
+        }
+    }
+    else
+    {
+        if(goal.x < centroidDef.x - 35){
+            de = deW;
+            Kr = KrW;
+        }
+        else{
+            de = 1;
+            Kr = 0;
+        }
+    }
+
+    dataState selectRobotAux;
+    Point2f defender;
+    if (teamRobot[0].getFunction() == DEFENDER)
+        defender = teamRobot[0].getDataState().pos;
+    else if (teamRobot[1].getFunction() == DEFENDER)
+        defender = teamRobot[1].getDataState().pos;
+    else if (teamRobot[2].getFunction() == DEFENDER)
+        defender = teamRobot[2].getDataState().pos;
+
+    if (ball.pos.x < centroidDef.x + defenderLine)
+    {
+        if(ball.pos.y < centroidDef.y - 35)
+        {
+            if(selectRobot.pos.x < centroidDef.x + defenderLine)
+            {
+                if(selectRobot.pos.y > goalk.pos.y - 10)
+                    flagAvoidGoalkepper = true;
+                else
+                    flagAvoidGoalkepper = false;
+            }
+            else
+            {
+                flagAvoidGoalkepper = false;
+            }
+        }
+        else if(ball.pos.y > centroidDef.y + 35)
+        {
+            if(selectRobot.pos.x < centroidDef.x + defenderLine)
+            {
+                if(selectRobot.pos.y < goalk.pos.y + 10)
+                    flagAvoidGoalkepper = true;
+                else
+                    flagAvoidGoalkepper = false;
+            }
+            else
+            {
+                flagAvoidGoalkepper = false;
+            }
+        }
+    }
+
+    if(flagAvoidGoalkepper)
+    {
+        k_larg = 0.08;
+        thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), goalk.pos);
+    }
+    else
+    {
+        if(euclidean_dist(selectRobot.pos,defender) < 15 && euclidean_dist(ball.pos,defender) > 15)
+        {
+            flagAvoidDefender = true;
+            k_larg = 0.06;
+            thePhi = repulsiveMath(teamRobot[indexRobot].getDataState(), defender);
+        }
+        else
+        {
+            //            if(flagGoAhead)
+            //                thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos,goal);
+            //            elseHIG
+            if(flagStopOnGoal)
+                thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos, goal);
+            else
+                univectorField(teamRobot[indexRobot].getDataState(), defender);
+        }
+    }
+    if(penaultyPermission == true || freeBallSituation == true)
+    {
+        kickBall();
+        setAtkSituation(true);
+    }
+
+    if (tempoRepulsive == 0)
+    {
+        //cout << "entrou aqui?" << endl;
+        ClockStartR = clock();
+        tempoStopRepulsive = 0;
+        flagGrab = false;
+        StrikeRepulsive = selectRobot.pos;
+    }
+    tempoRepulsive = (double) (clock() - ClockStartR)/CLOCKS_PER_SEC;
+    //    cout  << "tempo repulsive: " << tempoRepulsive << endl;
+    if (tempoRepulsive >= 3){
+        //        cout << "dist: " << euclidean_dist(StrikeRepulsive, selectRobot.pos) << endl;
+        //        cout << "StrikeRepulsive (" << StrikeRepulsive.x << ","  << StrikeRepulsive.y << ")" << endl;
+        //        cout << "selectRobot (" << selectRobot.pos.x << ","  << selectRobot.pos.y << ")" << endl;
+        if (euclidean_dist(StrikeRepulsive, selectRobot.pos) <= 5 || flagGrab == true)
+        {
+            //cout << "REPULSIVE" << endl;
+            k_larg = 0.01;
+            thePhi = ajustaAngulo(thePhi + 90);
+            //cout << "thePHI: " << thePhi << endl;
+            if(flagGrab == false){
+                //cout << "iniciou stop clock" << endl;
+                ClockStopR = clock();
+            }
+            flagGrab = true;
+        }
+        else
+        {
+            tempoRepulsive = 0;
+        }
+    }
+    if(flagGrab == true){
+        tempoStopRepulsive = (double) (clock() - ClockStopR)/CLOCKS_PER_SEC;
+    }
+    //    cout << tempoStopRepulsive << endl;
+    if (tempoStopRepulsive >= 0.5)
+    {
+        //cout << "REINICIA REPULSIVE" << endl;
+        tempoRepulsive = 0;
+        tempoStopRepulsive = 0;
+
+        flagGrab = false;
+    }
+
+    bool main = priority(selectRobot.pos, collaboratorK.pos);
+    Vmax = getVmax();
+
+    // Área de defesa
+    if (ball.pos.x < centroidDef.x + 15 && abs(ball.pos.y - centroidDef.y) < 35)  {
+        if(ball.pos.y < centroidDef.y + 20 && ball.pos.y > centroidDef.y - 20) {
+            if (main) {
+                goal = {centroidDef.x + 20, centroidDef.y + 40};
+            }
+            else {
+                goal = {centroidDef.x + 30, centroidDef.y - 40};
+            }
+        }
+        else {
+            if(main) {
+                goal = ball.pos;
+            }
+            else {
+                goal = {centroidDef.x + 30, centroidDef.y - 40};
+            }
+        }
+        setStopOnGoal(true);
+    }
+    // Área de ataque
+    else if (ball.pos.x > centroidAtk.x - 20 && abs(ball.pos.y - centroidDef.y) < 35 && !main) {
+        if (ball.pos.y < centroidAtk.y) {
+            goal = {centroidAtk.x - 20, centroidAtk.y + 40};
+        }
+        else {
+            goal = {centroidAtk.x - 20, centroidAtk.y - 40};
+        }
+        setStopOnGoal(true);
+    }
+    // Resto do campo
+    else {
+        if (!main) {
+            getVmax() * 0.6;
+            
+            if (ball.pos.y < collaboratorK.pos.y) {
+                goal = newPoint(goal, -spacing.y, spacing.x);
+            }
+            else {
+                goal = newPoint(goal, spacing.y, spacing.x);
+            }
+        }
+    }
 }
 
 void GameFunctions::strikerBezier() {

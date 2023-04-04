@@ -32,17 +32,21 @@ gamewindow::gamewindow()
 void gamewindow::updateInfo(vector<robot> robots, vector<robot> enemy, Point2f def, Point2f atk, dataState ball, KNN k)
 {
     deecision.setRobots(robots);
+    deecision.setEnemy(enemy);
     deecision.setAreas(def,atk);
     deecision.setBall(ball);
     deecision.setKnnInformation(k);
     deecision.updateObjectives();
-    vector<robot> teste;
-    teste = deecision.getTeamRobots();
-    updateRunFunctions(teste,deecision.getCentroidDef(),deecision.getCentroidAtk(),deecision.getBall());
+
+    vector<robot> ourTeam = deecision.getTeamRobots(), otherTeam = deecision.getEnemyRobots();
+    Point2f centroidDef = deecision.getCentroidDef(), centroidAtk = deecision.getCentroidAtk();
+
+    updateRunFunctions(ourTeam, otherTeam, centroidDef, centroidAtk, deecision.getBall());
 }
-void gamewindow::updateRunFunctions(vector<robot> robots, Point2f def, Point2f atk, dataState b)
+void gamewindow::updateRunFunctions(vector<robot> robots, vector<robot> enemy, Point2f def, Point2f atk, dataState b)
 {
     FOR_EACH_ROBOT_FUNCTIONS(setRobots(robots));
+    FOR_EACH_ROBOT_FUNCTIONS(setEnemy(enemy));
     FOR_EACH_ROBOT_FUNCTIONS(setAreas(def,atk));
     FOR_EACH_ROBOT_FUNCTIONS(setBall(b));
     FOR_EACH_ROBOT_FUNCTIONS(setStrategy(STRATEGY));

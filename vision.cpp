@@ -27,8 +27,11 @@ void vision::setCentroidAtk(Point2f atk)
 
 void vision::setRobots(vector<robot> robotsPoints)
 {
-
     robots = robotsPoints;
+}
+void vision::setEnemy(vector<robot> enemyPoints)
+{
+    enemy = enemyPoints;
 }
 
 void vision::setBall(dataState ball)

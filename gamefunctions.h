@@ -12,6 +12,7 @@ class GameFunctions: public Navigation
 public:
     GameFunctions();
     void setRobots(vector<robot>);
+    void setEnemy(vector<robot>);
     void setAreas(Point2f, Point2f);
     void setAgainstTheTeam(bool);
     bool getAgainsTheTeam();
@@ -39,7 +40,7 @@ public:
     void wing();
     void volante();
     void libero();
-    void newstriker();
+    void collaborator();
     void strikerBezier();
     void offdefender();
     void PlotPath(int i, robot);
@@ -56,12 +57,14 @@ public:
     bool getTiroMeta();
     void setlittleChute(bool);
     bool getlittleChute();
+    bool priority(Point2f _thisPos, Point2f _anotherPos);
     void setIndex(int);
     Point2f getGoal();
     float getDirection();
     ~GameFunctions();
     int getStrategy();
     void setStrategy(int);
+    float getVmax();
 
     bool airball;
     bool fedUp;
@@ -69,6 +72,7 @@ public:
     Point2f atkPoint;
     clock_t speedmf;
     vector<robot> teamRobot;
+    vector<robot> enemyRobot;
 
     float getgSizeW();
     void setgSizeW(float a);

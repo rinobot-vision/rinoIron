@@ -22,6 +22,7 @@ public:
     void setCentroidDef(Point2f def);
     void setCentroidAtk(Point2f atk);
     void setRobots(vector<robot>);
+    void setEnemy(vector<robot>);
     void setBall(dataState);
 
     vector<robot> getRobots();

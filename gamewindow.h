@@ -21,7 +21,7 @@ public:
     Decision deecision;
 
     void updateInfo(vector<robot>, vector<robot>, Point2f, Point2f, dataState, KNN k);
-    void updateRunFunctions(vector<robot>, Point2f, Point2f, dataState);
+    void updateRunFunctions(vector<robot>, vector<robot>, Point2f, Point2f, dataState);
     GameFunctions *robotFunctions[3];
     Mover *mover[3];
     int get_strategy();

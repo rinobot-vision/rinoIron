@@ -13,6 +13,7 @@
 #define LIBERO 7
 #define STRIKERAGAINSTEAM 8
 #define OFFDEFENDER 9
+#define DYNAMIC 10
 //Definido para testes
 #define NONE 10
 

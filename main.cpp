@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
     gamewindow GameWindow;
     GameWindow.setStrategy(atoi(argv[2]));
     Vision = new vision;
-    vector<robot> rinobot; //___
+    vector<robot> rinobot, enemy; //___
 
     dataState bola;
 
@@ -125,34 +125,52 @@ int main(int argc, char *argv[]) {
             bola.vel = Point2f(ball.vx()*100*(-1),ball.vy()*100*(-1));
         }
 
+        fira_message::Robot robot;
+        Point2f pos, vel;
+        enemy.resize(3);
+        double ang;
 
         if(ourColor == VSSRef::Color::BLUE){
             for (int i = 0; i < robots_n; i++) {
-                fira_message::Robot robot = detection.robots_blue(i);
-                Point2f pos;
-                Point2f vel;
+                robot = detection.robots_blue(i);
                 pos.x = (length+robot.x())*100;
                 pos.y = (width+robot.y())*100;//convertendo para centimetros
-                double ang = ajustaAngulo(robot.orientation()*180/PI);
+                ang = ajustaAngulo(robot.orientation()*180/PI);
                 vel = Point2f(robot.vx()*100,robot.vy()*100);
                 rinobot[i].setPosition(pos,ang, vel); //___
+
+                robot = detection.robots_yellow(i);
+                pos.x = (length+robot.x())*100;
+                pos.y = (width+robot.y())*100;//convertendo para centimetros
+                ang = ajustaAngulo(robot.orientation()*180/PI);
+                vel = Point2f(robot.vx()*100,robot.vy()*100);
+                enemy[i].setPosition(pos,ang, vel); //___
             }
         }
 
         if(ourColor == VSSRef::Color::YELLOW){
             for (int i = 0; i < robots_n; i++) {
-                fira_message::Robot robot = detection.robots_yellow(i);
-                Point2f pos;
-                pos.x = (fabs(-length+robot.x()))*100;
-                pos.y = (fabs(-width+robot.y()))*100;//convertendo para centimetros
-                double ang = ajustaAngulo(robot.orientation()*180/PI+180);
-                Point2f vel = Point2f(robot.vx()*100*(-1),robot.vy()*100*(-1)); //___
+                robot = detection.robots_yellow(i);
+                pos.x = (length+robot.x())*100;
+                pos.y = (width+robot.y())*100;//convertendo para centimetros
+                ang = ajustaAngulo(robot.orientation()*180/PI);
+                vel = Point2f(robot.vx()*100,robot.vy()*100);
                 rinobot[i].setPosition(pos,ang, vel); //___
+
+                robot = detection.robots_blue(i);
+                pos.x = (length+robot.x())*100;
+                pos.y = (width+robot.y())*100;//convertendo para centimetros
+                ang = ajustaAngulo(robot.orientation()*180/PI);
+                vel = Point2f(robot.vx()*100,robot.vy()*100);
+                enemy[i].setPosition(pos,ang, vel); //___
             }
         }
-
         Vision->setBall(bola);
-        Vision->setRobots(rinobot); //___
+        Vision->setRobots(rinobot);
+        std::cout << rinobot.size() << std::endl;
+        std::cout << enemy.size() << std::endl;
+        Vision->setEnemy(enemy); //___
+
         if(robots_n != 0 && refereeClient->getLastFoul() == VSSRef::Foul::GAME_ON)
             GameWindow.updateInfo(Vision->getRobots(),Vision->getEnemy(),Vision->getCentroidDef(), Vision->getCentroidAtk(), Vision->getBall(), Knn);
 
