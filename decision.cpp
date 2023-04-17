@@ -790,6 +790,12 @@ void Decision::updateObjectives()
         teamRobot[2].setFunction(robotFunc[2]);
     }
 
+    else if(strategy == ANGRY_DEFENDER_STR) {
+        teamRobot[2].setFunction(ANGRY_DEFENDER);
+        teamRobot[1].setFunction(ANGRY_DEFENDER);
+        teamRobot[0].setFunction(GOALKEEPER);
+    }
+
     else if(strategy == OFF)
     {
         robotFunc[0] = DEFENDER;

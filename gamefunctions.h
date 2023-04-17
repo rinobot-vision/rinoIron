@@ -34,6 +34,7 @@ public:
     bool getStopOnGoal();
     void striker();
     void defender();
+    void angryDefender();
     void goalkeeper();
     void fake9();
     void midfield();

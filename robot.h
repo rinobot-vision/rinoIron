@@ -16,6 +16,7 @@
 //Definido para testes
 #define NONE 10
 #define COLLABORATOR 11
+#define ANGRY_DEFENDER 12
 
 
 class robot

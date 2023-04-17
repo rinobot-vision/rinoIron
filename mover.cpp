@@ -59,6 +59,9 @@ void Mover::run()
         case COLLABORATOR:
             collaborator();
             break;
+        case ANGRY_DEFENDER:
+            angryDefender();
+            break;
         default:
             break;
         }
@@ -2043,6 +2046,243 @@ void Mover::kickRotate()
         rVel = velGiroLado;
         lVel = -velGiroLado;
     }
+}
+
+void Mover::angryDefender() {
+    Point2f robotPos = teamRobot[indexRobot].getDataState().pos;
+    float robotAngle = teamRobot[indexRobot].getDataState().angle;
+    float vMax = this->vMax*0.01;
+    float dist = euclidean_dist(robotPos,ball.pos);
+    kp = 10;
+    //float ct = 2;
+    if((((float)clock()-AllSecondClock)/CLOCKS_PER_SEC)>=0.7)
+    {
+        AllSecondClock = clock();
+        grabPos.pop_front();
+        grabPos.push_back(robotPos);
+        if(euclidean_dist(grabPos.back(),grabPos.front())<1)
+        {
+            inverte = true;
+            if (BlockClock == 0)
+                BlockClock = clock();
+        }
+        else{
+            inverte = false;
+        }
+
+    }
+    if((BlockClock-clock())/CLOCKS_PER_SEC > 3)
+    {
+        inverte = false;
+        BlockClock = 0;
+    }
+
+    //if(dist < 25 && dist > 12 && robotPos.x < ball.pos.x)
+    //{
+    //    vMax = vMax*dist*(0.20)/(13);//*0.3/16;
+    //    if(vMax < 0.7)
+    //        vMax = 0.7;
+    //}
+
+    //    vMax = this->vMax;
+
+    //    if (teempo<=ct)
+    //    {
+    //        vMax=teempo*vMax/ct;
+    //    }
+
+
+    contRev++;
+    float limiarTheta = 90;
+    float deltaLimiar = 0; //30
+    //float vDelta = 0.8*vMax;
+    float v, w, theta;
+
+
+    // Angulo do CPU
+
+    theta = robotFunctions[indexRobot]->getDirection();
+    //PID
+    //inverte = false;
+
+    alpha = theta - robotAngle;
+    alpha = ajustaAngulo(alpha);
+    alphaS = alpha;
+    //inverte = false;
+
+    //novo método de controle
+    float F, Fmax, d0; //d0 é a distancia que o robô estará da meta quando começar a desacelerar
+    d0 = 5;
+    Fmax=1;
+    float Kv = 0.8;
+    float Kw = 2.2;
+
+    if(dist>=d0)
+        F=Fmax;
+    else
+        F=(0.8*Fmax*(d0-dist))+(0.2*Fmax);
+
+    if(contRev>10000)
+    {
+        if(fabs(alpha) <= limiarTheta)
+        {
+            revFlag = true;
+        }
+        else
+        {
+            revFlag = false;
+        }
+        //cout<<contRev<<endl;
+        contRev = 0;
+    }
+
+    if(!inverte)
+    {
+
+        if (revFlag)
+        {
+            //v = -vDelta * fabs(alpha) / limiarTheta + vMax;
+            //w = (kp * alpha / 180) + (kd * (alpha - lastAlpha));
+
+            v=F*cos(alpha *PI/180)*Kv;
+            w=F*sin(alpha*PI/180)*Kw;
+            //limiarTheta = 90 - deltaLimiar;
+        }
+        else
+        {
+            alpha = ajustaAngulo(alpha + 180);
+            //v = vDelta * fabs(alpha) / limiarTheta - vMax;
+            //w = (kp * alpha / 180) + (kd * (alpha - lastAlpha));
+
+            v=-F*cos(alpha*PI/180)*Kv;
+            w=F*sin(alpha*PI/180)*Kw;
+
+            //limiarTheta = 90 + deltaLimiar;
+        }
+    }
+    else{
+        v=F*cos(alpha *PI/180)*Kv;
+        w=F*sin(alpha*PI/180)*Kw;
+    }
+
+    //Limitação utilizada no VSSS físico
+    //    if(w > 21)
+    //        w = 21;
+    //    if(w < -21)
+    //        w = -21;
+
+    if(robotFunctions[indexRobot]->getStopOnGoal() == true)
+    {
+        theta = robotFunctions[indexRobot]->getDirection();
+        alpha = theta - robotAngle;
+        alpha = ajustaAngulo(alpha);
+        //if(euclidean_dist(robotPos,robotFunctions[indexRobot]->goal) < 25)
+        //{
+        //    vMax *= 0.6;
+        //    vDelta = vMax*0.8;
+        //}
+        if (revFlag)
+        {
+            //v = -vDelta * fabs(alpha) / limiarTheta + vMax;
+            //w = (kp * alpha / 180) + (kd * (alpha - lastAlpha));
+
+            v=F*cos(alpha*PI/180)*Kv;
+            w=F*sin(alpha*PI/180)*Kw;
+            //limiarTheta = 90 - deltaLimiar;
+        }
+        else
+        {
+            alpha = ajustaAngulo(alpha + 180);
+            //v = vDelta * fabs(alpha) / limiarTheta - vMax;
+            //w = (kp * alpha / 180) + (kd * (alpha - lastAlpha));
+
+            v=-F*cos(alpha*PI/180)*Kv;
+            w=F*sin(alpha*PI/180)*Kw;
+            //limiarTheta = 90 + deltaLimiar;
+        }
+
+        //                cout << "Waiting for stopp" << endl;
+        if((fabs(robotPos.x - robotFunctions[indexRobot]->getGoal().x) < 3) && (fabs(robotPos.y - robotFunctions[indexRobot]->getGoal().y) < 3) )
+        {
+            v = 0;
+            if(fabs(robotAngle) > 85 && fabs(robotAngle) < 95)
+            {
+                w = 0;
+                //                                    cout << "chegou" << endl;
+            }
+            else
+            {
+                //                                                    cout << "ajusta" << endl;
+                alpha = 90 - robotAngle;
+                alpha = ajustaAngulo(alpha);
+                if (revFlag)
+                {
+                    w = 3*kp*alpha/180;
+                }
+                else
+                {
+                    alpha = ajustaAngulo(alpha+180);
+                    w = 3*kp*alpha/180;
+                }
+            }
+        }
+
+    }
+    lVel = (v - w*l)*100;
+    rVel = (v + w*l)*100;
+
+    if(inverte)
+    {
+        if (rVel > lVel){
+            rVel += 50;
+            lVel -= 50;
+        }
+        else{
+            lVel += 50;
+            rVel -= 50;
+        }
+        float pato = - rVel;
+        rVel= - lVel;
+        lVel=pato;
+    }
+
+    lastAlpha = alpha;
+    if(robotFunctions[indexRobot]->getAgainsTheTeam() == false)
+        rotate();
+    else
+        rotateInv();
+
+    if(robotFunctions[indexRobot]->getAtkSituation() == true)
+    {
+        if(againstTheTeam == false)
+        {
+            if(euclidean_dist(ball.pos,robotPos) < 10)
+            {
+                if(firstAceleration == true)
+                {
+                    clockAceleration = clock();
+                }
+                firstAceleration = false;
+                atkSituation();
+            }
+            else
+            {
+                firstAceleration = true;
+            }
+        }
+        else
+            atkSituationInv();
+
+    }
+    else
+    {
+        firstAceleration = true;
+    }
+
+    //    if(robotFunctions[indexRobot]->getKickState() == true)
+    //    {
+    //        kickPenalty();
+    //    }
 }
 
 void Mover::atkSituation()

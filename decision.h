@@ -14,6 +14,7 @@
 #define SAFE_FULL_ATK 2
 #define FIXED2_0 4
 #define COLLABORATOR_STR 5
+#define ANGRY_DEFENDER_STR 6
 #ifndef DECISION_H
 #define DECISION_H
 

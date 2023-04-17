@@ -28,6 +28,7 @@ public:
     void volante();
     void fuzzy();
     void impostor();
+    void angryDefender();
     void libero();
     void Control();
     void newstriker();

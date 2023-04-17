@@ -41,6 +41,9 @@ void GameFunctions::run()
         case COLLABORATOR:
             collaborator();
             break;
+        case ANGRY_DEFENDER:
+            angryDefender();
+            break;
         default:
             break;
         }
@@ -756,17 +759,17 @@ void GameFunctions::goalkeeper()
         {
             if(prevY < centroidDef.y - 20)
             {
-                goal.x = centroidDef.x + 3;
+                goal.x = centroidDef.x - 5;
                 goal.y = centroidDef.y - 15;
             }
             else if(prevY > centroidDef.y + 20)
             {
-                goal.x = centroidDef.x + 3;
+                goal.x = centroidDef.x - 5;
                 goal.y = centroidDef.y + 15;
             }
             else
             {
-                goal.x = centroidDef.x + 3;
+                goal.x = centroidDef.x - 5;
                 goal.y = prevY;
 
             //    if (ball.pos.x < centroidDef.x + 15) {
@@ -777,7 +780,7 @@ void GameFunctions::goalkeeper()
         else
         {
             //goal.x = centroidDef.x + 4.2;
-            goal.x = centroidDef.x + 3;
+            goal.x = centroidDef.x - 5;
             goal.y = centroidDef.y;
         }
     }
@@ -2222,6 +2225,43 @@ void GameFunctions::PlotPath(int i, robot robot)
     }
     //    if(robot.getFunction() == STRIKER)
     //        cout << "cont: " << cont << endl;
+}
+
+void GameFunctions::angryDefender() {
+    dataState angryDefenderK;
+    if (teamRobot[0].getFunction() == ANGRY_DEFENDER && indexRobot != 0)
+        angryDefenderK = teamRobot[0].getDataState();
+    else if (teamRobot[1].getFunction() == ANGRY_DEFENDER && indexRobot != 1)
+        angryDefenderK = teamRobot[1].getDataState();
+    else if (teamRobot[2].getFunction() == ANGRY_DEFENDER && indexRobot != 2)
+        angryDefenderK = teamRobot[2].getDataState();
+    if(ball.pos.x <= centroidDef.x + 20 && ball.pos.x >= centroidDef.x + 6) {
+        if(euclidean_dist(teamRobot[indexRobot].getDataState().pos, centroidDef) < euclidean_dist(angryDefenderK.pos, centroidDef)) {
+            goal = ball.pos;
+            thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos, ball.pos);
+        }
+        else {
+            goal.x = 50.f;
+            goal.y = ball.pos.y;
+            thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos, goal);
+        }
+    }
+    else if(ball.pos.x <= centroidDef.x + 6) {
+        if(euclidean_dist(teamRobot[indexRobot].getDataState().pos, centroidDef) < euclidean_dist(angryDefenderK.pos, centroidDef)) {
+            goal.x = teamRobot[indexRobot].getDataState().pos.x;
+            goal.y = ball.pos.y;
+            thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos, goal);
+        }
+        else {
+            goal.x = 50.f;
+            goal.y = ball.pos.y;
+            thePhi = angleTwoPoints(teamRobot[indexRobot].getDataState().pos, goal);
+        }
+    }
+    else {
+        std::cout << "Go to ball" << std::endl;
+        collaborator();
+    }
 }
 
 void GameFunctions::setPlot(bool state)
